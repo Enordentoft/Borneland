@@ -4,6 +4,8 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -27,7 +29,7 @@ public class DBHandler {
             String connectionUrl = "jdbc:sqlserver://192.168.100.106;user=Michael;password=123;";
             con = DriverManager.getConnection(connectionUrl);           
             System.out.println("Connected!");
-            testConnection();
+            getScore();
         } catch (SQLException ex) {
             Logger.getLogger(DBHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -37,19 +39,23 @@ public class DBHandler {
         return con;
     }
 
-    public void testConnection() {
+    public List<String> getScore() throws SQLException {
+        ArrayList<String> list = new ArrayList();
         try {
-            String q = "SELECT * FROM BornelandDB.dbo.lanes";
+            String q = "SELECT * FROM BornelandDB.dbo.scores";
             Statement st = con.createStatement();
             ResultSet rs = st.executeQuery(q);
             while (rs.next()) {
-                System.out.println(
+                list.add(rs.getString(1)+rs.getString(2)+rs.getString(3)+rs.getString(4)+rs.getString(5));
+                /*System.out.println(
                         rs.getString(1)
                         + rs.getString(2));
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(ServletOne.class.getName()).log(Level.SEVERE, null, ex);
+            }*/
         }
+    }catch(Exception e){
+        e.printStackTrace();
     }
+    
+    return list;
 
-}
+}}
