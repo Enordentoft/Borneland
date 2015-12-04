@@ -60,11 +60,23 @@ public class ServletOne extends HttpServlet {
             out.println("</html>");
         }
     }
-    
+    /*
     public void print (PrintWriter out) throws SQLException{
-        List<String> list = db.getScore();
+        List<ScoreO> list = db.getScore();
         for (int i = 0; i < list.size(); i++) {
         out.println(list.get(i)+"<br>");
+        }}*/
+        
+        public void print (PrintWriter out) throws SQLException{
+        List<ScoreObject> list = db.getScore();
+        for (int i = 0; i < list.size(); i++) {
+        out.println(list.get(i).getParticipantID());
+        out.println(list.get(i).getfName());
+        out.println(list.get(i).getlName());
+        out.println(list.get(i).getfName());
+        out.println(list.get(i).getRoundNumber());
+        out.println(list.get(i).getResult());        
+        out.println("<br>");
         }
         
     }
@@ -82,7 +94,7 @@ public class ServletOne extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         if(request.getParameter("fname").equals("333")){
-            System.out.println("testtest");
+            System.out.println("doGet in servlet");
         }
         
         try {

@@ -27,9 +27,9 @@ public class DBHandler {
             //System.err.println("start connection try");
             // String connectionUrl = "jdbc:sqlserver://localhost;user=sa;password=waterline;";
             String connectionUrl = "jdbc:sqlserver://192.168.100.106;user=Michael;password=123;";
-            con = DriverManager.getConnection(connectionUrl);           
+            con = DriverManager.getConnection(connectionUrl);
             System.out.println("Connected!");
-            getScore();
+            //getScore();
         } catch (SQLException ex) {
             Logger.getLogger(DBHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -38,24 +38,80 @@ public class DBHandler {
     public Connection getConnecion() {
         return con;
     }
-
+/*
     public List<String> getScore() throws SQLException {
         ArrayList<String> list = new ArrayList();
         try {
-            String q = "SELECT * FROM BornelandDB.dbo.scores";
+            String q = "EXECUTE getScoreFirst";
             Statement st = con.createStatement();
             ResultSet rs = st.executeQuery(q);
             while (rs.next()) {
-                list.add(rs.getString(1)+rs.getString(2)+rs.getString(3)+rs.getString(4)+rs.getString(5));
-                /*System.out.println(
-                        rs.getString(1)
-                        + rs.getString(2));
-            }*/
+                list.add(rs.getString(1) + rs.getString(2) + rs.getString(3) + rs.getString(4) + rs.getString(5));
+                System.out.println(
+                 rs.getString(1)
+                 + rs.getString(2));
+                 }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-    }catch(Exception e){
-        e.printStackTrace();
-    }
-    
-    return list;
 
-}}
+        return list;
+
+    }*/
+
+    public List<ScoreObject> getScore() throws SQLException {
+        List<ScoreObject> list = new ArrayList();
+        try {
+            //String q = "SELECT * FROM BornelandDB.dbo.scores";
+            String q = "EXECUTE getScoreFirst";
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery(q);
+            while (rs.next()) {
+
+                list.add(new ScoreObject(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5)));
+                /*System.out.println(
+                 rs.getString(1)
+                 + rs.getString(2));
+                 }*/
+
+            }
+            list = getNames(list);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return list;
+
+    }
+
+    public List<ScoreObject> getNames(List<ScoreObject> list) {
+        List<ScoreObject> list2 = new ArrayList<>();
+        try {
+            for (int i = 0; i < list.size(); i++) {
+
+                String q = "EXECUTE getScoreSecond @participantID=" + list.get(i).getParticipantID() + " , @raceID="+list.get(i).getRaceID();
+                Statement st = con.createStatement();
+                ResultSet rs = st.executeQuery(q);
+                while (rs.next()) {
+                    System.out.println("**********************************************");
+                   // System.out.println(rs.get);                    
+                    System.out.println(rs.getString("firstName"));
+                    System.out.println(rs.getString("lastName"));
+                    System.out.println(rs.getString("laneID"));
+                    System.out.println(rs.getString("numberOfRounds"));
+                    list.get(i).setfName(rs.getString(1));
+                    list.get(i).setlName(rs.getString(2));
+                    list.get(i).setLaneID(rs.getString(3));
+                    list.get(i).setNumberOfRounds(rs.getString(4));
+
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return list2;
+    }
+
+}
