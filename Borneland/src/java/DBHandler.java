@@ -90,20 +90,24 @@ public class DBHandler {
         try {
             for (int i = 0; i < list.size(); i++) {
 
-                String q = "EXECUTE getScoreSecond @participantID=" + list.get(i).getParticipantID() + " , @raceID="+list.get(i).getRaceID();
+               
+              String q = "EXECUTE getScoreSecond @participantID=" + list.get(i).getParticipantID();
+             //   String q = "select participants.firstName, participants.lastName, races.laneID, races.numberOfRounds \n" +
+//"from participants, races where participants.participantID =" +list.get(i).getParticipantID()+" and races.participantID = "+list.get(i).getParticipantID();
                 Statement st = con.createStatement();
                 ResultSet rs = st.executeQuery(q);
-                while (rs.next()) {
-                    System.out.println("**********************************************");
-                   // System.out.println(rs.get);                    
-                    System.out.println(rs.getString("firstName"));
-                    System.out.println(rs.getString("lastName"));
+                while (rs.next()) {                    
+                 /*   System.out.println("**********************************************");                    
+                    System.out.println(rs.getString(1));
+                    System.out.println(rs.getString(2));
                     System.out.println(rs.getString("laneID"));
-                    System.out.println(rs.getString("numberOfRounds"));
+                    System.out.println(rs.getString("numberOfRounds"));*/
                     list.get(i).setfName(rs.getString(1));
                     list.get(i).setlName(rs.getString(2));
                     list.get(i).setLaneID(rs.getString(3));
                     list.get(i).setNumberOfRounds(rs.getString(4));
+                    System.out.println(list.get(i).getfName());
+                    System.out.println(list.get(i).getlName());
 
                 }
             }
