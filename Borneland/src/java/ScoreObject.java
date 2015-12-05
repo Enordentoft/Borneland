@@ -9,6 +9,7 @@
  * @author Michael
  */
 public class ScoreObject {
+
     private String scoreID;
     private String participantID;
     private String raceID;
@@ -18,8 +19,8 @@ public class ScoreObject {
     private String lName;
     private String laneID;
     private String numberOfRounds;
-    
-    public ScoreObject(String scoreID, String participantID, String raceID, String roundNumber, String result){     
+
+    public ScoreObject(String scoreID, String participantID, String raceID, String roundNumber, String result) {
         this.scoreID = scoreID;
         this.participantID = participantID;
         this.raceID = raceID;
@@ -58,11 +59,6 @@ public class ScoreObject {
     public void setNumberOfRounds(String numberOfRounds) {
         this.numberOfRounds = numberOfRounds;
     }
-    
-    
-
-  
-    
 
     public String getScoreID() {
         return scoreID;
@@ -84,7 +80,11 @@ public class ScoreObject {
         return result;
     }
 
-    
-    
-    
+    @Override
+    public String toString() {
+        return " scoreID: " + scoreID + " participantID: " + participantID + " raceID: " + raceID + " roundNumber: " + roundNumber
+                + " result: " + result + " fName: " + fName + " lName: " + lName + " laneID: " + laneID + " numberOfRounds: " + numberOfRounds;
+
+    }
+
 }

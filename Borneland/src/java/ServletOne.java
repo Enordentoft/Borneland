@@ -24,15 +24,15 @@ public class ServletOne extends HttpServlet {
 
     DBHandler db;
     Connection con;
+    String tableRow;
+    String tableRound;
 
     @Override
     public void init() throws ServletException {
         super.init(); //To change body of generated methods, choose Tools | Templates.
         db = new DBHandler();
-        
+
     }
-
-
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -54,31 +54,95 @@ public class ServletOne extends HttpServlet {
             out.println("<title>Servlet ServletOne</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet ServletOne at " + request.getContextPath() + "</h1>");
+           // out.println("<h1>Servlet ServletOne at " + request.getContextPath() + "</h1>");
+            out.println("<h1>ServletOne: Results for parents </h1>");
             print(out);
             out.println("</body>");
             out.println("</html>");
         }
     }
     /*
-    public void print (PrintWriter out) throws SQLException{
-        List<ScoreO> list = db.getScore();
-        for (int i = 0; i < list.size(); i++) {
-        out.println(list.get(i)+"<br>");
-        }}*/
-        
-        public void print (PrintWriter out) throws SQLException{
+     public void print (PrintWriter out) throws SQLException{
+     List<ScoreO> list = db.getScore();
+     for (int i = 0; i < list.size(); i++) {
+     out.println(list.get(i)+"<br>");
+     }}*/
+
+    public void print(PrintWriter out) throws SQLException {
         List<ScoreObject> list = db.getScore();
+        //Loops through each object
         for (int i = 0; i < list.size(); i++) {
-        out.println(list.get(i).getParticipantID());
-        out.println(list.get(i).getfName());
-        out.println(list.get(i).getlName());
-        out.println(list.get(i).getfName());
-        out.println(list.get(i).getRoundNumber());
-        out.println(list.get(i).getResult());        
-        out.println("<br>");
-        }
+            //its the first object, create column labels
+            if (i == 0) {
+                out.println("<table border=\"1\">\n"
+                + "<thead >\n"
+                    + "<tr>\n"
+                        + "<th>ParticipantID</th>\n"
+                        + "<th>FirstName</th>\n"
+                        + "<th>LastName</th>\n"
+                        + "<th>Round1</th>\n"
+                        + "<th>Round2</th>\n"
+                        + "<th>Round3</th>\n"
+                        + "<th>Round4</th>\n"
+                        + "<th>Round5</th>\n"
+                        + "<th>Round6</th>\n"
+                        + "<th>Score</th>\n"
+                        + "<th>Place</th>\n" 
+                   + "</tr>\n"
+                + "</thead>");
+
+                out.println(addTableRow(list.get(i).getParticipantID(),list.get(i).getfName(),list.get(i).getlName(),list.get(i).getRoundNumber(),list.get(i).getNumberOfRounds()
+                     ,list.get(i).getResult(),"place?"));
+                //if its the last object, end the table
+            } else if (i == list.size()) {
+              out.println("</tbody>\n" + "</table>");
+              //add a row for each participant object
+            } else {
+             out.println(addTableRow(list.get(i).getParticipantID(),list.get(i).getfName(),list.get(i).getlName(),list.get(i).getRoundNumber(),list.get(i).getNumberOfRounds()
+                     ,list.get(i).getResult(),"place?"));
         
+
+            }
+
+       /*
+            out.println(list.get(i).getParticipantID());
+            out.println(list.get(i).getfName());
+            out.println(list.get(i).getlName());
+            out.println(list.get(i).getRoundNumber());
+            out.println(list.get(i).getResult());
+            out.println("<br>");*/
+        }
+
+    }
+
+    /**
+     *adds a row for each participant object
+     * @param partID
+     * @param fName
+     * @param lName
+     * @param round
+     * @param numberOfRounds
+     * @param result
+     * @param place
+     * @return
+     */
+    public String addTableRow(String partID, String fName, String lName, String round,String numberOfRounds, String result, String place) {
+        tableRound = "";
+        tableRow = "<tbody>\n" +
+                   "<tr>\n" +
+"                    <td>"+partID+"</td>\n" +
+"                    <td>"+fName+"</td>\n" +
+"                    <td>"+lName+"</td>\n"; 
+                //adds row cells based on numberOfRounds
+                 for (int i = 1; i < Integer.parseInt(numberOfRounds)+1; i++) {
+                     //adds score to the correct round
+                     tableRound += "<td>" + (Integer.parseInt(round) == i ? result : "")+"</td>\n";}
+        
+             tableRow += tableRound;    
+             tableRow +=  "<td>"+result+"</td>\n" +
+                        "<td>"+place+"</td>\n" +//11
+                        "</tr>";     
+        return tableRow;
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -93,10 +157,10 @@ public class ServletOne extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        if(request.getParameter("fname").equals("333")){
+        if (request.getParameter("fname").equals("333")) {
             System.out.println("doGet in servlet");
         }
-        
+
         try {
             processRequest(request, response);
         } catch (SQLException ex) {
