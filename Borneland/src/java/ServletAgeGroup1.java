@@ -55,7 +55,7 @@ public class ServletAgeGroup1 extends HttpServlet {
             out.println("<title>Servlet ServletOne</title>");
             out.println("</head>");
             out.println("<body>");
-           // out.println("<h1>Servlet ServletAgeGroup1 at " + request.getContextPath() + "</h1>");
+            // out.println("<h1>Servlet ServletAgeGroup1 at " + request.getContextPath() + "</h1>");
             out.println("<h1>ServletOne: Results for parents </h1>");
             print(out);
             out.println("</body>");
@@ -77,8 +77,8 @@ public class ServletAgeGroup1 extends HttpServlet {
             //its the first object, create column labels
             if (i == 0) {
                 out.println("<table border=\"1\">\n"
-                + "<thead >\n"
-                    + "<tr>\n"
+                        + "<thead >\n"
+                        + "<tr>\n"
                         + "<th>ParticipantID</th>\n"
                         + "<th>FirstName</th>\n"
                         + "<th>LastName</th>\n"
@@ -89,36 +89,34 @@ public class ServletAgeGroup1 extends HttpServlet {
                         + "<th>Round5</th>\n"
                         + "<th>Round6</th>\n"
                         + "<th>Score</th>\n"
-                        + "<th>Place</th>\n" 
-                   + "</tr>\n"
-                + "</thead>");
+                        + "<th>Place</th>\n"
+                        + "</tr>\n"
+                        + "</thead>");
 
-                out.println(addTableRow(list.get(i).getParticipantID(),list.get(i).getfName(),list.get(i).getlName(),list.get(i).getRoundNumber(),list.get(i).getNumberOfRounds()
-                     ,list.get(i).getResultList().get(i),"place?"));
+                out.println(addTableRow(list.get(i).getParticipantID(), list.get(i).getfName(), list.get(i).getlName(), list.get(i).getRoundNumber(), list.get(i).getNumberOfRounds(), list.get(i).getResultList(), "place?",list.get(i).getTotalScore()));
                 //if its the last object, end the table
             } else if (i == list.size()) {
-              out.println("</tbody>\n" + "</table>");
-              //add a row for each participant object
+                out.println("</tbody>\n" + "</table>");
+                //add a row for each participant object
             } else {
-             out.println(addTableRow(list.get(i).getParticipantID(),list.get(i).getfName(),list.get(i).getlName(),list.get(i).getRoundNumber(),list.get(i).getNumberOfRounds()
-                     ,list.get(i).getResultList().get(i),"place?"));
-        
+                out.println(addTableRow(list.get(i).getParticipantID(), list.get(i).getfName(), list.get(i).getlName(), list.get(i).getRoundNumber(), list.get(i).getNumberOfRounds(), list.get(i).getResultList(), "place?",list.get(i).getTotalScore()));
 
             }
 
-       /*
-            out.println(list.get(i).getParticipantID());
-            out.println(list.get(i).getfName());
-            out.println(list.get(i).getlName());
-            out.println(list.get(i).getRoundNumber());
-            out.println(list.get(i).getResult());
-            out.println("<br>");*/
+            /*
+             out.println(list.get(i).getParticipantID());
+             out.println(list.get(i).getfName());
+             out.println(list.get(i).getlName());
+             out.println(list.get(i).getRoundNumber());
+             out.println(list.get(i).getResult());
+             out.println("<br>");*/
         }
 
     }
 
     /**
-     *adds a row for each participant object
+     * adds a row for each participant object
+     *
      * @param partID
      * @param fName
      * @param lName
@@ -126,24 +124,31 @@ public class ServletAgeGroup1 extends HttpServlet {
      * @param numberOfRounds
      * @param result
      * @param place
+     * @param totalScore
      * @return
      */
-    public String addTableRow(String partID, String fName, String lName, String round,String numberOfRounds, String result, String place) {
+    public String addTableRow(String partID, String fName, String lName, String round, String numberOfRounds, List<String> result, String place, int totalScore) {
         tableRound = "";
-        tableRow = "<tbody>\n" +
-                   "<tr>\n" +
-"                    <td>"+partID+"</td>\n" +
-"                    <td>"+fName+"</td>\n" +
-"                    <td>"+lName+"</td>\n"; 
+        tableRow = "<tbody>\n"
+                + "<tr>\n"
+                + "                    <td>" + partID + "</td>\n"
+                + "                    <td>" + fName + "</td>\n"
+                + "                    <td>" + lName + "</td>\n";
                 //adds row cells based on numberOfRounds
-                 for (int i = 1; i < Integer.parseInt(numberOfRounds)+1; i++) {
-                     //adds score to the correct round
-                     tableRound += "<td>" + (Integer.parseInt(round) == i ? result : "")+"</td>\n";}
-        
-             tableRow += tableRound;    
-             tableRow +=  "<td>"+result+"</td>\n" +
-                        "<td>"+place+"</td>\n" +//11
-                        "</tr>";     
+
+        for (int i = 0; i < Integer.parseInt(numberOfRounds) ; i++) {
+            //adds scores
+            //System.out.println("+++++++++++++++++++++++++"+result.get(i));
+            tableRound += "<td>" + ((i < result.size()) ? result.get(i):"") + "</td>\n";
+        }
+
+        /* for (int i = 1; i < Integer.parseInt(numberOfRounds)+1; i++) {
+         //adds score to the correct round
+         tableRound += "<td>" + (Integer.parseInt(round) == i ? result : "")+"</td>\n";}*/
+        tableRow += tableRound;
+        tableRow += "<td>" + totalScore + "</td>\n"
+                + "<td>" + place + "</td>\n" +//11
+                "</tr>";
         return tableRow;
     }
 

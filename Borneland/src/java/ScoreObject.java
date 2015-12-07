@@ -1,4 +1,5 @@
 
+import java.util.ArrayList;
 import java.util.List;
 
 /*
@@ -22,14 +23,19 @@ public class ScoreObject {
     private String laneID;
     private String numberOfRounds;
     private List<String> resultList;
+    private int totalScore;
 
     public ScoreObject(String scoreID, String participantID, String raceID, String roundNumber, String result) {
+        totalScore = 0;
         this.scoreID = scoreID;
         this.participantID = participantID;
         this.raceID = raceID;
         this.roundNumber = roundNumber;
-        resultList.add(result);
+        resultList = new ArrayList<>();            
+        addResultToList(result);
     }
+    
+   
 
     public String getfName() {
         return fName;
@@ -83,9 +89,17 @@ public class ScoreObject {
         return resultList;
     }
     
-    public void addResultToList(String result) {
+    public final void addResultToList(String result) {
         resultList.add(result);
+        totalScore += Integer.parseInt(result);
+        
     }
+
+    public int getTotalScore() {
+        return totalScore;
+    }
+    
+    
 
     @Override
     public String toString() {
@@ -94,4 +108,5 @@ public class ScoreObject {
 
     }
 
+    
 }

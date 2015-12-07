@@ -21,13 +21,13 @@ import java.util.logging.Logger;
 public class DBHandler {
 
     long lastUpdate, currentUpdate;
-    List<ScoreObject> ScoreObjectList;
+    List<ScoreObject> scoreObjectList;
     Connection con;
 
     public DBHandler() {
         createConnection();
         lastUpdate = System.currentTimeMillis();
-        ScoreObjectList = new ArrayList();
+        scoreObjectList = new ArrayList();
 
     }
 
@@ -54,9 +54,10 @@ public class DBHandler {
             ResultSet rs = st.executeQuery(q);
             while (rs.next()) {
                 if (checkID(rs.getString("participantID"), rs.getString("result"))) {
+                   // System.out.println("id already exists *****************************");             
                 } else {
-
-                    ScoreObjectList.add(new ScoreObject(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5)));
+                   // System.out.println("id did not exist, added ***************************");
+                    scoreObjectList.add(new ScoreObject(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5)));
                 }
 
             }
@@ -65,23 +66,23 @@ public class DBHandler {
             e.printStackTrace();
         }
 
-        return getNames(ScoreObjectList);
+        return getNames(scoreObjectList);
 
     }
 
     public boolean checkID(String ID, String result) {
-        if (ScoreObjectList.isEmpty()) {
+        if (scoreObjectList.isEmpty()) {
             return false;
         } else {
-            for (int i = 0; i < ScoreObjectList.size(); i++) {
-                if (ScoreObjectList.get(i).getParticipantID().equals(ID)) {
-                    ScoreObjectList.get(i).addResultToList(result);
+            for (int i = 0; i < scoreObjectList.size(); i++) {
+                if (scoreObjectList.get(i).getParticipantID().equals(ID)) {
+                    scoreObjectList.get(i).addResultToList(result);
                     return true;
                 }
 
             }
 
-            return true;
+            return false;
         }
     }
 
@@ -96,6 +97,8 @@ public class DBHandler {
                     list.get(i).setlName(rs.getString(2));
                     list.get(i).setLaneID(rs.getString(3));
                     list.get(i).setNumberOfRounds(rs.getString(4));
+                    System.out.println(list.get(i).toString());
+                    System.out.println(list.size());
 
                 }
             }
@@ -106,31 +109,31 @@ public class DBHandler {
     }
 
     /**
-     * Return a new ScoreObjectList from database if last update was more than
+     * Return a new scoreObjectList from database if last update was more than
      * 20 sec, else return old list
      *
      * @return
      */
     public List<ScoreObject> getScoreList() {
         currentUpdate = System.currentTimeMillis();
-        System.out.println("******************************************\n"
-                + "getupdate time since last update:" + (currentUpdate - lastUpdate) / 1000);
+        System.out.println("Time since last update:" + (currentUpdate - lastUpdate) / 1000);
+                
 
         //Get list from database
-        if ((currentUpdate - lastUpdate) / 1000 > 20 || ScoreObjectList.isEmpty()) {
+        if ((currentUpdate - lastUpdate) / 1000 > 20 || scoreObjectList.isEmpty()) {
             System.out.println("Returning scores from database");
             try {
                 lastUpdate = System.currentTimeMillis();
-                ScoreObjectList.clear();
+                scoreObjectList.clear();
                 return getScore();
             } catch (SQLException ex) {
                 ex.printStackTrace();
             }
 
         }
-        System.out.println("returning old ScoreObjectList Because last update was done: \n " + (currentUpdate - lastUpdate) / 1000 + "seconds ago");
+        System.out.println("returning old ScoreObjectList Because last update was done: \n" + (currentUpdate - lastUpdate) / 1000 + "seconds ago");
         //get old list
-        return ScoreObjectList;
+        return scoreObjectList;
 
     }
 
