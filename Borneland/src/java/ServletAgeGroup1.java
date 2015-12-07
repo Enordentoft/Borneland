@@ -94,14 +94,14 @@ public class ServletAgeGroup1 extends HttpServlet {
                 + "</thead>");
 
                 out.println(addTableRow(list.get(i).getParticipantID(),list.get(i).getfName(),list.get(i).getlName(),list.get(i).getRoundNumber(),list.get(i).getNumberOfRounds()
-                     ,list.get(i).getResult(),"place?"));
+                     ,list.get(i).getResultList().get(i),"place?"));
                 //if its the last object, end the table
             } else if (i == list.size()) {
               out.println("</tbody>\n" + "</table>");
               //add a row for each participant object
             } else {
              out.println(addTableRow(list.get(i).getParticipantID(),list.get(i).getfName(),list.get(i).getlName(),list.get(i).getRoundNumber(),list.get(i).getNumberOfRounds()
-                     ,list.get(i).getResult(),"place?"));
+                     ,list.get(i).getResultList().get(i),"place?"));
         
 
             }

@@ -53,8 +53,11 @@ public class DBHandler {
             Statement st = con.createStatement();
             ResultSet rs = st.executeQuery(q);
             while (rs.next()) {
+                if (checkID(rs.getString("participantID"), rs.getString("result"))) {
+                } else {
 
-                ScoreObjectList.add(new ScoreObject(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5)));
+                    ScoreObjectList.add(new ScoreObject(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5)));
+                }
 
             }
             // list = getNames(list);
@@ -64,6 +67,22 @@ public class DBHandler {
 
         return getNames(ScoreObjectList);
 
+    }
+
+    public boolean checkID(String ID, String result) {
+        if (ScoreObjectList.isEmpty()) {
+            return false;
+        } else {
+            for (int i = 0; i < ScoreObjectList.size(); i++) {
+                if (ScoreObjectList.get(i).getParticipantID().equals(ID)) {
+                    ScoreObjectList.get(i).addResultToList(result);
+                    return true;
+                }
+
+            }
+
+            return true;
+        }
     }
 
     public List<ScoreObject> getNames(List<ScoreObject> list) {
