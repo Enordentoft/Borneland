@@ -20,7 +20,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author Michael
  */
-public class ServletOne extends HttpServlet {
+public class ServletAgeGroup1 extends HttpServlet {
 
     DBHandler db;
     Connection con;
@@ -51,10 +51,11 @@ public class ServletOne extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
+            out.println("<meta http-equiv=\"refresh\" content=\"5\">");
             out.println("<title>Servlet ServletOne</title>");
             out.println("</head>");
             out.println("<body>");
-           // out.println("<h1>Servlet ServletOne at " + request.getContextPath() + "</h1>");
+           // out.println("<h1>Servlet ServletAgeGroup1 at " + request.getContextPath() + "</h1>");
             out.println("<h1>ServletOne: Results for parents </h1>");
             print(out);
             out.println("</body>");
@@ -164,7 +165,7 @@ public class ServletOne extends HttpServlet {
         try {
             processRequest(request, response);
         } catch (SQLException ex) {
-            Logger.getLogger(ServletOne.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ServletAgeGroup1.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -182,7 +183,7 @@ public class ServletOne extends HttpServlet {
         try {
             processRequest(request, response);
         } catch (SQLException ex) {
-            Logger.getLogger(ServletOne.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ServletAgeGroup1.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
