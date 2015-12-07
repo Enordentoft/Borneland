@@ -23,7 +23,6 @@ import javax.servlet.http.HttpServletResponse;
 public class ServletAgeGroup1 extends HttpServlet {
 
     DBHandler db;
-    Connection con;
     String tableRow;
     String tableRound;
 
@@ -165,9 +164,7 @@ public class ServletAgeGroup1 extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        if (request.getParameter("fname").equals("333")) {
-            System.out.println("doGet in servlet");
-        }
+    
 
         try {
             processRequest(request, response);
