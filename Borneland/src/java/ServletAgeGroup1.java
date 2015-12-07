@@ -70,7 +70,8 @@ public class ServletAgeGroup1 extends HttpServlet {
      }}*/
 
     public void print(PrintWriter out) throws SQLException {
-        List<ScoreObject> list = db.getScore();
+        //List<ScoreObject> list = db.getScore();
+        List<ScoreObject> list = db.getScoreList();
         //Loops through each object
         for (int i = 0; i < list.size(); i++) {
             //its the first object, create column labels
