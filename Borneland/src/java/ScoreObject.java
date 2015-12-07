@@ -16,6 +16,7 @@ public class ScoreObject {
 
     private String scoreID;
     private String participantID;
+    private String ageGroup;
     private String raceID;
     private String roundNumber;
     private String fName;
@@ -35,7 +36,13 @@ public class ScoreObject {
         addResultToList(result);
     }
     
-   
+    public void setAgeGroup(String ageGroup) {
+        this.ageGroup = ageGroup;
+    }
+    
+    public String getAgeGroup() {
+        return ageGroup;
+    }
 
     public String getfName() {
         return fName;

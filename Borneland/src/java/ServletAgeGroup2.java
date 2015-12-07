@@ -20,7 +20,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author Michael
  */
-public class ServletAgeGroup1 extends HttpServlet {
+public class ServletAgeGroup2 extends HttpServlet {
 
     DBHandler db;
     Connection con;
@@ -88,18 +88,20 @@ public class ServletAgeGroup1 extends HttpServlet {
                         + "<th>Round4</th>\n"
                         + "<th>Round5</th>\n"
                         + "<th>Round6</th>\n"
+                        + "<th>Round7</th>\n"
+                        + "<th>Round8</th>\n"
                         + "<th>Score</th>\n"
                         + "<th>Place</th>\n"
                         + "</tr>\n"
                         + "</thead>");
-                if (list.get(i).getAgeGroup().equals("1")) {
+                if (list.get(i).getAgeGroup().equals("2")) {
                     out.println(addTableRow(list.get(i).getParticipantID(), list.get(i).getfName(), list.get(i).getlName(), list.get(i).getRoundNumber(), list.get(i).getNumberOfRounds(), list.get(i).getResultList(), "place?", list.get(i).getTotalScore()));
                 }
                 //if its the last object, end the table
             } else if (i == list.size()) {
                 out.println("</tbody>\n" + "</table>");
                 //add a row for each participant object
-            } else if (list.get(i).getAgeGroup().equals("1")) {
+            } else if (list.get(i).getAgeGroup().equals("2")) {
                 out.println(addTableRow(list.get(i).getParticipantID(), list.get(i).getfName(), list.get(i).getlName(), list.get(i).getRoundNumber(), list.get(i).getNumberOfRounds(), list.get(i).getResultList(), "place?", list.get(i).getTotalScore()));
             }
 

@@ -20,7 +20,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author Michael
  */
-public class ServletAgeGroup1 extends HttpServlet {
+public class ServletAllAgeGroups extends HttpServlet {
 
     DBHandler db;
     Connection con;
@@ -62,13 +62,13 @@ public class ServletAgeGroup1 extends HttpServlet {
             out.println("</html>");
         }
     }
-
     /*
      public void print (PrintWriter out) throws SQLException{
      List<ScoreO> list = db.getScore();
      for (int i = 0; i < list.size(); i++) {
      out.println(list.get(i)+"<br>");
      }}*/
+
     public void print(PrintWriter out) throws SQLException {
         //List<ScoreObject> list = db.getScore();
         List<ScoreObject> list = db.getScoreList();
@@ -92,15 +92,15 @@ public class ServletAgeGroup1 extends HttpServlet {
                         + "<th>Place</th>\n"
                         + "</tr>\n"
                         + "</thead>");
-                if (list.get(i).getAgeGroup().equals("1")) {
-                    out.println(addTableRow(list.get(i).getParticipantID(), list.get(i).getfName(), list.get(i).getlName(), list.get(i).getRoundNumber(), list.get(i).getNumberOfRounds(), list.get(i).getResultList(), "place?", list.get(i).getTotalScore()));
-                }
+
+                out.println(addTableRow(list.get(i).getParticipantID(), list.get(i).getfName(), list.get(i).getlName(), list.get(i).getRoundNumber(), list.get(i).getNumberOfRounds(), list.get(i).getResultList(), "place?",list.get(i).getTotalScore()));
                 //if its the last object, end the table
             } else if (i == list.size()) {
                 out.println("</tbody>\n" + "</table>");
                 //add a row for each participant object
-            } else if (list.get(i).getAgeGroup().equals("1")) {
-                out.println(addTableRow(list.get(i).getParticipantID(), list.get(i).getfName(), list.get(i).getlName(), list.get(i).getRoundNumber(), list.get(i).getNumberOfRounds(), list.get(i).getResultList(), "place?", list.get(i).getTotalScore()));
+            } else {
+                out.println(addTableRow(list.get(i).getParticipantID(), list.get(i).getfName(), list.get(i).getlName(), list.get(i).getRoundNumber(), list.get(i).getNumberOfRounds(), list.get(i).getResultList(), "place?",list.get(i).getTotalScore()));
+
             }
 
             /*
@@ -134,12 +134,12 @@ public class ServletAgeGroup1 extends HttpServlet {
                 + "                    <td>" + partID + "</td>\n"
                 + "                    <td>" + fName + "</td>\n"
                 + "                    <td>" + lName + "</td>\n";
-        //adds row cells based on numberOfRounds
+                //adds row cells based on numberOfRounds
 
-        for (int i = 0; i < Integer.parseInt(numberOfRounds); i++) {
+        for (int i = 0; i < Integer.parseInt(numberOfRounds) ; i++) {
             //adds scores
             //System.out.println("+++++++++++++++++++++++++"+result.get(i));
-            tableRound += "<td>" + ((i < result.size()) ? result.get(i) : "") + "</td>\n";
+            tableRound += "<td>" + ((i < result.size()) ? result.get(i):"") + "</td>\n";
         }
 
         /* for (int i = 1; i < Integer.parseInt(numberOfRounds)+1; i++) {
@@ -147,8 +147,7 @@ public class ServletAgeGroup1 extends HttpServlet {
          tableRound += "<td>" + (Integer.parseInt(round) == i ? result : "")+"</td>\n";}*/
         tableRow += tableRound;
         tableRow += "<td>" + totalScore + "</td>\n"
-                + "<td>" + place + "</td>\n"
-                +//11
+                + "<td>" + place + "</td>\n" +//11
                 "</tr>";
         return tableRow;
     }

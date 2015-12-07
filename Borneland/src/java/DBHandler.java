@@ -97,6 +97,7 @@ public class DBHandler {
                     list.get(i).setlName(rs.getString(2));
                     list.get(i).setLaneID(rs.getString(3));
                     list.get(i).setNumberOfRounds(rs.getString(4));
+                    list.get(i).setAgeGroup(rs.getString(5));
                     System.out.println(list.get(i).toString());
                     System.out.println(list.size());
 
