@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -21,13 +22,15 @@ import java.util.logging.Logger;
 public class DBHandler {
 
     long lastUpdate, currentUpdate;
-    List<ScoreObject> scoreObjectList;
+    ArrayList<ScoreObject> scoreObjectList;
+    ArrayList<ScoreObject> rankedObjectList;
     Connection con;
 
     public DBHandler() {
         createConnection();
         lastUpdate = System.currentTimeMillis();
         scoreObjectList = new ArrayList();
+       
 
     }
 
@@ -45,7 +48,13 @@ public class DBHandler {
         return con;
     }
 
-    public List<ScoreObject> getScore() throws SQLException {
+    public List<ScoreObject> getScoreForRanking(){
+         rankedObjectList = (ArrayList<ScoreObject>) getUpdatedScore().clone();
+         Collections.sort(getUpdatedScore(),new RankComparator());
+       return rankedObjectList;
+    }
+    
+    public ArrayList<ScoreObject> getScore() throws SQLException {
         try {
 
             //String q = "SELECT * FROM BornelandDB.dbo.scores";
@@ -54,19 +63,27 @@ public class DBHandler {
             ResultSet rs = st.executeQuery(q);
             while (rs.next()) {
                 if (checkID(rs.getString("participantID"), rs.getString("result"))) {
-                   // System.out.println("id already exists *****************************");             
+                    // System.out.println("id already exists *****************************");             
                 } else {
-                   // System.out.println("id did not exist, added ***************************");
+                    // System.out.println("id did not exist, added ***************************");
                     scoreObjectList.add(new ScoreObject(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5)));
                 }
 
             }
-            // list = getNames(list);
+            //get names
+            scoreObjectList = getNames(scoreObjectList);
+            //sort by lane and totalScore
+            Collections.sort(scoreObjectList, new PartComparator());
+            
+            for (ScoreObject scoreObjectList1 : scoreObjectList) {
+                System.out.println(scoreObjectList1.toString()+"\n");
+            }
+            
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        return getNames(scoreObjectList);
+        return scoreObjectList;
 
     }
 
@@ -86,7 +103,7 @@ public class DBHandler {
         }
     }
 
-    public List<ScoreObject> getNames(List<ScoreObject> list) {
+    public ArrayList<ScoreObject> getNames(ArrayList<ScoreObject> list) {
         try {
             for (int i = 0; i < list.size(); i++) {
                 String q = "EXECUTE getScoreSecond @participantID=" + list.get(i).getParticipantID();
@@ -98,8 +115,7 @@ public class DBHandler {
                     list.get(i).setLaneID(rs.getString(3));
                     list.get(i).setNumberOfRounds(rs.getString(4));
                     list.get(i).setAgeGroup(rs.getString(5));
-                    System.out.println(list.get(i).toString());
-                    System.out.println(list.size());
+                  
 
                 }
             }
@@ -115,13 +131,13 @@ public class DBHandler {
      *
      * @return
      */
-    public List<ScoreObject> getScoreList() {
+    public ArrayList<ScoreObject> getUpdatedScore() {
         currentUpdate = System.currentTimeMillis();
+        int waitTime = 20;
         System.out.println("Time since last update:" + (currentUpdate - lastUpdate) / 1000);
-                
 
         //Get list from database
-        if ((currentUpdate - lastUpdate) / 1000 > 20 || scoreObjectList.isEmpty()) {
+        if ((currentUpdate - lastUpdate) / 1000 > waitTime || scoreObjectList.isEmpty()) {
             System.out.println("Returning scores from database");
             try {
                 lastUpdate = System.currentTimeMillis();

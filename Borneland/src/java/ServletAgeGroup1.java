@@ -55,11 +55,84 @@ public class ServletAgeGroup1 extends HttpServlet {
             out.println("</head>");
             out.println("<body>");
             // out.println("<h1>Servlet ServletAllAgeGroups at " + request.getContextPath() + "</h1>");
-            out.println("<h1>ServletOne: Results for parents </h1>");
-            print(out);
+            out.println("<h1>Age Group 1: Results for parents </h1>");
+            print(out);            
+            printRankings(out);            
             out.println("</body>");
             out.println("</html>");
         }
+    }
+    
+    public void printRankings (PrintWriter out){
+        List<ScoreObject> list = db.getScoreForRanking();
+         
+        //print for each ageGroup
+        for (int l = 1; l < 4; l++) {
+            int numberOfRounds = 10;
+            int ageGroup = 0;
+            //Find number of rounds for the current lane
+            for(ScoreObject ob : list){
+                if (ob.getAgeGroup().equals(""+l)){
+                    numberOfRounds = Integer.parseInt(ob.getNumberOfRounds());
+                    ageGroup = Integer.parseInt(ob.getAgeGroup());
+                    break;
+                }
+                
+            }
+            
+            
+        
+        //Loops through each object
+        for (int i = 0; i < list.size(); i++) {
+            //only print lanes with the correct ageGroup
+            if(ageGroup != l){
+                break;
+            }
+            //its the first object, create column labels
+            if (i == 0) {
+                
+                
+                out.println("<table border=\"1\">\n"
+                        + "<thead >\n"
+                        + "<tr>\n"
+                        + "<th>ParticipantID</th>\n"
+                        + "<th>FirstName</th>\n"
+                        + "<th>LastName</th>\n");
+                //Print headings for numberOfRounds in current lane
+                for (int r = 1; r < numberOfRounds+1; r++) {
+                     out.println( "<th>Round"+ r +"</th>\n");
+                }                        
+                       out.println( "<th>Score</th>\n"
+                        + "<th>Place</th>\n"
+                        + "</tr>\n"
+                        + "</thead>");
+                if (list.get(i).getAgeGroup().equals("1")&&list.get(i).getLaneID().equals(""+l)) {
+                    out.println(addTableRow(list.get(i).getParticipantID(), list.get(i).getfName(), list.get(i).getlName(), list.get(i).getRoundNumber(), list.get(i).getNumberOfRounds(), list.get(i).getResultList(), "place?", list.get(i).getTotalScore()));
+                }
+            //add a row for each participant object && if its the correct lane
+            }  else if (list.get(i).getAgeGroup().equals("1")&&list.get(i).getLaneID().equals(""+l)) {
+                out.println(addTableRow(list.get(i).getParticipantID(), list.get(i).getfName(), list.get(i).getlName(), list.get(i).getRoundNumber(), list.get(i).getNumberOfRounds(), list.get(i).getResultList(), "place?", list.get(i).getTotalScore()));
+            
+            } 
+             //if its the last object, end the table
+            if (i == list.size()-1) {
+                out.println("<br>");
+                out.println("Lane: "+l);
+                out.println("</tbody>\n" + "</table>");
+       
+            }
+        
+
+            /*
+             out.println(list.get(i).getParticipantID());
+             out.println(list.get(i).getfName());
+             out.println(list.get(i).getlName());
+             out.println(list.get(i).getRoundNumber());
+             out.println(list.get(i).getResult());
+             out.println("<br>");*/
+        }
+        }
+        
     }
 
     /*
@@ -70,37 +143,63 @@ public class ServletAgeGroup1 extends HttpServlet {
      }}*/
     public void print(PrintWriter out) throws SQLException {
         //List<ScoreObject> list = db.getScore();
-        List<ScoreObject> list = db.getScoreList();
+        List<ScoreObject> list = db.getUpdatedScore();
+        //print for each lane - 10 lanes hardcoded
+        for (int l = 1; l < 10; l++) {
+            int numberOfRounds = 10;
+            int ageGroup = 0;
+            //Find number of rounds for the current lane
+            for(ScoreObject ob : list){
+                if (ob.getLaneID().equals(""+l)){
+                    numberOfRounds = Integer.parseInt(ob.getNumberOfRounds());
+                    ageGroup = Integer.parseInt(ob.getAgeGroup());
+                    break;
+                }
+                
+            }
+            
+            
+        
         //Loops through each object
         for (int i = 0; i < list.size(); i++) {
+            //only print lanes with the correct ageGroup
+            if(ageGroup != 1){
+                break;
+            }
             //its the first object, create column labels
             if (i == 0) {
+                
+                
                 out.println("<table border=\"1\">\n"
                         + "<thead >\n"
                         + "<tr>\n"
                         + "<th>ParticipantID</th>\n"
                         + "<th>FirstName</th>\n"
-                        + "<th>LastName</th>\n"
-                        + "<th>Round1</th>\n"
-                        + "<th>Round2</th>\n"
-                        + "<th>Round3</th>\n"
-                        + "<th>Round4</th>\n"
-                        + "<th>Round5</th>\n"
-                        + "<th>Round6</th>\n"
-                        + "<th>Score</th>\n"
+                        + "<th>LastName</th>\n");
+                //Print headings for numberOfRounds in current lane
+                for (int r = 1; r < numberOfRounds+1; r++) {
+                     out.println( "<th>Round"+ r +"</th>\n");
+                }                        
+                       out.println( "<th>Score</th>\n"
                         + "<th>Place</th>\n"
                         + "</tr>\n"
                         + "</thead>");
-                if (list.get(i).getAgeGroup().equals("1")) {
+                if (list.get(i).getAgeGroup().equals("1")&&list.get(i).getLaneID().equals(""+l)) {
                     out.println(addTableRow(list.get(i).getParticipantID(), list.get(i).getfName(), list.get(i).getlName(), list.get(i).getRoundNumber(), list.get(i).getNumberOfRounds(), list.get(i).getResultList(), "place?", list.get(i).getTotalScore()));
                 }
-                //if its the last object, end the table
-            } else if (i == list.size()) {
-                out.println("</tbody>\n" + "</table>");
-                //add a row for each participant object
-            } else if (list.get(i).getAgeGroup().equals("1")) {
+            //add a row for each participant object && if its the correct lane
+            }  else if (list.get(i).getAgeGroup().equals("1")&&list.get(i).getLaneID().equals(""+l)) {
                 out.println(addTableRow(list.get(i).getParticipantID(), list.get(i).getfName(), list.get(i).getlName(), list.get(i).getRoundNumber(), list.get(i).getNumberOfRounds(), list.get(i).getResultList(), "place?", list.get(i).getTotalScore()));
+            
+            } 
+             //if its the last object, end the table
+            if (i == list.size()-1) {
+                out.println("<br>");
+                out.println("Lane: "+l);
+                out.println("</tbody>\n" + "</table>");
+       
             }
+        
 
             /*
              out.println(list.get(i).getParticipantID());
@@ -109,6 +208,7 @@ public class ServletAgeGroup1 extends HttpServlet {
              out.println(list.get(i).getRoundNumber());
              out.println(list.get(i).getResult());
              out.println("<br>");*/
+        }
         }
 
     }
@@ -133,8 +233,8 @@ public class ServletAgeGroup1 extends HttpServlet {
                 + "                    <td>" + partID + "</td>\n"
                 + "                    <td>" + fName + "</td>\n"
                 + "                    <td>" + lName + "</td>\n";
+        
         //adds row cells based on numberOfRounds
-
         for (int i = 0; i < Integer.parseInt(numberOfRounds); i++) {
             //adds scores
             //System.out.println("+++++++++++++++++++++++++"+result.get(i));
