@@ -11,23 +11,15 @@ and open the template in the editor.
         <!--  <meta http-equiv="refresh" content="5"> -->
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
     </head>
-    <body>
-        <form action="ServletAllAgeGroups" method="GET">      
-            <input type="submit" value=" AllGroups " />
-        </form>
+    <body>      
 
-        <form action="ServletAgeGroup1" method="GET">         
-            <input type="submit" value="AgeGroup1" />    
-        </form>
-
-        <form action="ServletAgeGroup2" method="GET">            
-            <input type="submit" value="AgeGroup2" />  
-            <select name="myDropDown" size="1">
-                <option>hej</option>
-                <option>hej2</option>
-                <option>hej3</option>
-                <option></option>
-                <option></option>
+        <form action="ServletController" method="GET">            
+            <input type="submit" value="ShowTables" />  
+            <select name="ageDropDown" size="1">
+                <option value="1">Age 0-6</option>
+                <option value="2">Age 7-9</option>
+                <option value="3">Age 10-14</option>
+                
             </select>  
         </form>
 

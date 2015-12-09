@@ -1,4 +1,9 @@
+package dbhandler;
 
+
+import functions.PartComparator;
+import functions.RankComparator;
+import functions.ScoreObject;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -153,5 +158,12 @@ public class DBHandler {
         return scoreObjectList;
 
     }
+    
+    public void getRankings(ArrayList<ScoreObject> list){
+        
+        
+        
+    }
+    
 
 }

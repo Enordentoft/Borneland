@@ -1,3 +1,5 @@
+package functions;
+
 
 import java.sql.Date;
 
@@ -10,7 +12,7 @@ import java.sql.Date;
  * Sorts participants by laneID and totalScore
  * @author Michael
  */
-class PartComparator implements java.util.Comparator<ScoreObject> {
+public class PartComparator implements java.util.Comparator<ScoreObject> {
 
     @Override
     public int compare(ScoreObject o1, ScoreObject o2) {

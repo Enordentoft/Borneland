@@ -1,3 +1,5 @@
+package functions;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -8,7 +10,7 @@
  *
  * @author Michael
  */
-  class RankComparator implements java.util.Comparator<ScoreObject> {
+  public class RankComparator implements java.util.Comparator<ScoreObject> {
 
     @Override
     public int compare(ScoreObject o1, ScoreObject o2) {
