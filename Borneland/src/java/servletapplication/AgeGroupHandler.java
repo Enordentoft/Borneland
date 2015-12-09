@@ -61,11 +61,11 @@ public class AgeGroupHandler {
                         + "</tr>\n"
                         + "</thead>");
                 if (list.get(i).getAgeGroup().equals(ageGroupIn)&&list.get(i).getLaneID().equals(""+l)) {
-                    out.println(controller.addTableRow(list.get(i).getParticipantID(), list.get(i).getfName(), list.get(i).getlName(), list.get(i).getRoundNumber(), list.get(i).getNumberOfRounds(), list.get(i).getResultList(), "place?", list.get(i).getTotalScore()));
+                    out.println(controller.addTableRow(list.get(i).getParticipantID(), list.get(i).getfName(), list.get(i).getlName(), list.get(i).getRoundNumber(), list.get(i).getNumberOfRounds(), list.get(i).getResultList(), "" +list.get(i).getPlace() , list.get(i).getTotalScore()));
                 }
             //add a row for each participant object && if its the correct lane
             }  else if (list.get(i).getAgeGroup().equals(ageGroupIn)&&list.get(i).getLaneID().equals(""+l)) {
-                out.println(controller.addTableRow(list.get(i).getParticipantID(), list.get(i).getfName(), list.get(i).getlName(), list.get(i).getRoundNumber(), list.get(i).getNumberOfRounds(), list.get(i).getResultList(), "place?", list.get(i).getTotalScore()));
+                out.println(controller.addTableRow(list.get(i).getParticipantID(), list.get(i).getfName(), list.get(i).getlName(), list.get(i).getRoundNumber(), list.get(i).getNumberOfRounds(), list.get(i).getResultList(),  "" +list.get(i).getPlace(), list.get(i).getTotalScore()));
             
             } 
              //if its the last object, end the table

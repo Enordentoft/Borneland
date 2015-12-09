@@ -25,6 +25,7 @@ public class ScoreObject {
     private String lName;
     private String laneID;
     private String numberOfRounds;
+    private int place;
     private List<String> resultList;
     private int totalScore;
 
@@ -106,6 +107,14 @@ public class ScoreObject {
 
     public int getTotalScore() {
         return totalScore;
+    }
+
+    public int getPlace() {
+        return place;
+    }
+
+    public void setPlace(int place) {
+        this.place = place;
     }
     
     

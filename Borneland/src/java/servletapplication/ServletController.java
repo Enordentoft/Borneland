@@ -60,7 +60,7 @@ public class ServletController extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<meta http-equiv=\"refresh\" content=\"5\">");
+            out.println("<meta http-equiv=\"refresh\" content=\"2\">");
             out.println("<title>Servlet ServletOne</title>");
             out.println("</head>");
             out.println("<body>");         

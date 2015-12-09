@@ -10,7 +10,7 @@ package functions;
  *
  * @author Michael
  */
-  public class RankComparator implements java.util.Comparator<ScoreObject> {
+  public class PlaceComparator implements java.util.Comparator<ScoreObject> {
 
     @Override
     public int compare(ScoreObject o1, ScoreObject o2) {

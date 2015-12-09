@@ -2,7 +2,7 @@ package dbhandler;
 
 
 import functions.PartComparator;
-import functions.RankComparator;
+import functions.PlaceComparator;
 import functions.ScoreObject;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -28,7 +28,7 @@ public class DBHandler {
 
     long lastUpdate, currentUpdate;
     ArrayList<ScoreObject> scoreObjectList;
-    ArrayList<ScoreObject> rankedObjectList;
+    //ArrayList<ScoreObject> rankedObjectList;
     Connection con;
 
     public DBHandler() {
@@ -52,12 +52,81 @@ public class DBHandler {
     public Connection getConnecion() {
         return con;
     }
-
-    public List<ScoreObject> getScoreForRanking(){
-         rankedObjectList = (ArrayList<ScoreObject>) getUpdatedScore().clone();
-         Collections.sort(getUpdatedScore(),new RankComparator());
-       return rankedObjectList;
+/**
+ * Sort by age and totalScore
+ * insert Place for each age group
+ * @return 
+ */
+  /*  public ArrayList<ScoreObject> setRanking(){
+        
+         //rankedObjectList = (ArrayList<ScoreObject>) getUpdatedScore().clone();
+         rankedObjectList = (ArrayList<ScoreObject>) scoreObjectList.clone();
+         Collections.sort(rankedObjectList,new PlaceComparator());
+         for (int i = 0; i < 4; i++) {
+             int place = 1;
+             for for (int k = 0; k < 10; k++) {
+                     
+                 
+ {
+            if(ob.getAgeGroup().equals(""+i)){
+                 ob.setPlace(place);
+                 if(rankedObjectList.get(rankedObjectList.indexOf(ob)).getTotalScore() != ob.getTotalScore()){
+                 place++;}
+             }
+                 
+             }
+             for (ScoreObject scoreObjectList1 : rankedObjectList) {
+                     System.out.println("Placing: "+ scoreObjectList1.getPlace());
+                 }
+             
+        }
+         
+         
     }
+    
+       return rankedObjectList;
+    }*/
+    
+      public ArrayList<ScoreObject> setRanking(ArrayList<ScoreObject> list){
+        
+         //rankedObjectList = (ArrayList<ScoreObject>) getUpdatedScore().clone();
+         //rankedObjectList = (ArrayList<ScoreObject>) scoreObjectList.clone();
+         Collections.sort(list,new PlaceComparator());
+         //loop each ageGroupID
+         for (int i = 0; i < 4; i++) {
+             int place = 1;
+             //Loop throuhg list
+             for (int k = 0; k < list.size(); k++) {
+                  
+               
+ {          //If the object has the correct ageGroup
+            if(list.get(k).getAgeGroup().equals(""+i)){
+                 list.get(k).setPlace(place);
+                
+                 if(list.get(k+1).getTotalScore() != list.get(k).getTotalScore())
+                 place++;
+             }}
+                    //to prevent out of bounds
+                 if(k == list.size()-2){
+                     if(list.get(k+1).getTotalScore() != list.get(k).getTotalScore()){
+                         place++;
+                     }
+                     list.get(k+1).setPlace(place);
+                     break;
+                 } 
+             }
+             
+             for (ScoreObject scoreObjectList1 : list) {
+                     System.out.println("Placing: "+ scoreObjectList1.getPlace());
+                 }
+             
+        }
+        
+         
+         
+       return list;
+    }
+    
     
     public ArrayList<ScoreObject> getScore() throws SQLException {
         try {
@@ -79,6 +148,8 @@ public class DBHandler {
             scoreObjectList = getNames(scoreObjectList);
             //sort by lane and totalScore
             Collections.sort(scoreObjectList, new PartComparator());
+            //set place (ranking)
+            setRanking(scoreObjectList);
             
             for (ScoreObject scoreObjectList1 : scoreObjectList) {
                 System.out.println(scoreObjectList1.toString()+"\n");
@@ -88,6 +159,7 @@ public class DBHandler {
             e.printStackTrace();
         }
 
+        //return scoreObjectList;
         return scoreObjectList;
 
     }
@@ -138,7 +210,7 @@ public class DBHandler {
      */
     public ArrayList<ScoreObject> getUpdatedScore() {
         currentUpdate = System.currentTimeMillis();
-        int waitTime = 20;
+        int waitTime = 2;
         System.out.println("Time since last update:" + (currentUpdate - lastUpdate) / 1000);
 
         //Get list from database
@@ -159,11 +231,6 @@ public class DBHandler {
 
     }
     
-    public void getRankings(ArrayList<ScoreObject> list){
-        
-        
-        
-    }
-    
+     
 
 }
