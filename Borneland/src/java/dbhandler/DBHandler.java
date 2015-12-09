@@ -1,6 +1,5 @@
 package dbhandler;
 
-
 import functions.PartComparator;
 import functions.PlaceComparator;
 import functions.ScoreObject;
@@ -35,7 +34,6 @@ public class DBHandler {
         createConnection();
         lastUpdate = System.currentTimeMillis();
         scoreObjectList = new ArrayList();
-       
 
     }
 
@@ -52,82 +50,80 @@ public class DBHandler {
     public Connection getConnecion() {
         return con;
     }
-/**
- * Sort by age and totalScore
- * insert Place for each age group
- * @return 
- */
-  /*  public ArrayList<ScoreObject> setRanking(){
+
+    /**
+     * Sort by age and totalScore insert Place for each age group
+     *
+     * @return
+     */
+    /*  public ArrayList<ScoreObject> setRanking(){
         
-         //rankedObjectList = (ArrayList<ScoreObject>) getUpdatedScore().clone();
-         rankedObjectList = (ArrayList<ScoreObject>) scoreObjectList.clone();
-         Collections.sort(rankedObjectList,new PlaceComparator());
-         for (int i = 0; i < 4; i++) {
-             int place = 1;
-             for for (int k = 0; k < 10; k++) {
+     //rankedObjectList = (ArrayList<ScoreObject>) getUpdatedScore().clone();
+     rankedObjectList = (ArrayList<ScoreObject>) scoreObjectList.clone();
+     Collections.sort(rankedObjectList,new PlaceComparator());
+     for (int i = 0; i < 4; i++) {
+     int place = 1;
+     for for (int k = 0; k < 10; k++) {
                      
                  
- {
-            if(ob.getAgeGroup().equals(""+i)){
-                 ob.setPlace(place);
-                 if(rankedObjectList.get(rankedObjectList.indexOf(ob)).getTotalScore() != ob.getTotalScore()){
-                 place++;}
-             }
+     {
+     if(ob.getAgeGroup().equals(""+i)){
+     ob.setPlace(place);
+     if(rankedObjectList.get(rankedObjectList.indexOf(ob)).getTotalScore() != ob.getTotalScore()){
+     place++;}
+     }
                  
-             }
-             for (ScoreObject scoreObjectList1 : rankedObjectList) {
-                     System.out.println("Placing: "+ scoreObjectList1.getPlace());
-                 }
+     }
+     for (ScoreObject scoreObjectList1 : rankedObjectList) {
+     System.out.println("Placing: "+ scoreObjectList1.getPlace());
+     }
              
+     }
+         
+         
+     }
+    
+     return rankedObjectList;
+     }*/
+
+    public ArrayList<ScoreObject> setRanking(ArrayList<ScoreObject> list) {
+
+        Collections.sort(list, new PlaceComparator());
+        //loop each ageGroupID
+        for (int i = 0; i < 4; i++) {
+            int place = 1;
+            //Loop throuhg list
+            for (int k = 0; k < list.size(); k++) {
+
+                {          //If the object has the correct ageGroup
+                    if (list.get(k).getAgeGroup().equals("" + i)) {
+                        list.get(k).setPlace(place);
+
+                        if (list.get(k + 1).getTotalScore() != list.get(k).getTotalScore()) {
+                            place++;
+                        }
+                    }
+                }
+                // handles last element, to prevent out of bounds exception
+                if (k == list.size() - 2) {
+                    if (list.get(k + 1).getTotalScore() != list.get(k).getTotalScore()) {
+                        place +=2;
+                        list.get(k + 1).setPlace(place);
+                        break;
+                    }
+
+                }
+            }
+
+            for (ScoreObject scoreObjectList1 : list) {
+                System.out.println("Placing: " + scoreObjectList1.getPlace());
+            }
+
         }
-         
-         
+
+        return list;
     }
-    
-       return rankedObjectList;
-    }*/
-    
-      public ArrayList<ScoreObject> setRanking(ArrayList<ScoreObject> list){
-        
-         //rankedObjectList = (ArrayList<ScoreObject>) getUpdatedScore().clone();
-         //rankedObjectList = (ArrayList<ScoreObject>) scoreObjectList.clone();
-         Collections.sort(list,new PlaceComparator());
-         //loop each ageGroupID
-         for (int i = 0; i < 4; i++) {
-             int place = 1;
-             //Loop throuhg list
-             for (int k = 0; k < list.size(); k++) {
-                  
-               
- {          //If the object has the correct ageGroup
-            if(list.get(k).getAgeGroup().equals(""+i)){
-                 list.get(k).setPlace(place);
-                
-                 if(list.get(k+1).getTotalScore() != list.get(k).getTotalScore())
-                 place++;
-             }}
-                    //to prevent out of bounds
-                 if(k == list.size()-2){
-                     if(list.get(k+1).getTotalScore() != list.get(k).getTotalScore()){
-                         place++;
-                     }
-                     list.get(k+1).setPlace(place);
-                     break;
-                 } 
-             }
-             
-             for (ScoreObject scoreObjectList1 : list) {
-                     System.out.println("Placing: "+ scoreObjectList1.getPlace());
-                 }
-             
-        }
-        
-         
-         
-       return list;
-    }
-    
-    
+
     public ArrayList<ScoreObject> getScore() throws SQLException {
         try {
 
@@ -150,11 +146,11 @@ public class DBHandler {
             Collections.sort(scoreObjectList, new PartComparator());
             //set place (ranking)
             setRanking(scoreObjectList);
-            
+
             for (ScoreObject scoreObjectList1 : scoreObjectList) {
-                System.out.println(scoreObjectList1.toString()+"\n");
+                System.out.println(scoreObjectList1.toString() + "\n");
             }
-            
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -192,7 +188,6 @@ public class DBHandler {
                     list.get(i).setLaneID(rs.getString(3));
                     list.get(i).setNumberOfRounds(rs.getString(4));
                     list.get(i).setAgeGroup(rs.getString(5));
-                  
 
                 }
             }
@@ -230,7 +225,5 @@ public class DBHandler {
         return scoreObjectList;
 
     }
-    
-     
 
 }
