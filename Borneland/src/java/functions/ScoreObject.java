@@ -1,6 +1,5 @@
 package functions;
 
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,7 +8,6 @@ import java.util.List;
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 /**
  *
  * @author Michael
@@ -35,14 +33,14 @@ public class ScoreObject {
         this.participantID = participantID;
         this.raceID = raceID;
         this.roundNumber = roundNumber;
-        resultList = new ArrayList<>();            
+        resultList = new ArrayList<>();
         addResultToList(result);
     }
-    
+
     public void setAgeGroup(String ageGroup) {
         this.ageGroup = ageGroup;
     }
-    
+
     public String getAgeGroup() {
         return ageGroup;
     }
@@ -98,11 +96,15 @@ public class ScoreObject {
     public List<String> getResultList() {
         return resultList;
     }
-    
+
     public final void addResultToList(String result) {
-        resultList.add(result);
-        totalScore += Integer.parseInt(result);
-        
+        if (result == null) {
+            resultList.add("-");
+        } else {
+            resultList.add(result);
+            totalScore += Integer.parseInt(result);
+        }
+
     }
 
     public int getTotalScore() {
@@ -116,15 +118,12 @@ public class ScoreObject {
     public void setPlace(int place) {
         this.place = place;
     }
-    
-    
 
     @Override
     public String toString() {
-        return "TotalScore:" +totalScore+ " scoreID: " + scoreID + " participantID: " + participantID + " raceID: " + raceID + " roundNumber: " + roundNumber
+        return "TotalScore:" + totalScore + " scoreID: " + scoreID + " participantID: " + participantID + " raceID: " + raceID + " roundNumber: " + roundNumber
                 + " result: " + resultList + " fName: " + fName + " lName: " + lName + " laneID: " + laneID + " numberOfRounds: " + numberOfRounds;
 
     }
 
-    
 }

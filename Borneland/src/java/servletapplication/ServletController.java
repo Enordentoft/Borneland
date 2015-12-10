@@ -33,12 +33,14 @@ public class ServletController extends HttpServlet {
     
     String tableRow;
     String tableRound;
+    String updateTime = "";
 
     @Override
     public void init() throws ServletException {
         super.init(); //To change body of generated methods, choose Tools | Templates.
         db = new DBHandler();
         handler = new AgeGroupHandler();
+        
 
     }
 
@@ -60,11 +62,12 @@ public class ServletController extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<meta http-equiv=\"refresh\" content=\"2\">");
+            out.println("<meta http-equiv=\"refresh\" content=\""+updateTime+"\">");
             out.println("<title>Servlet ServletOne</title>");
             out.println("</head>");
             out.println("<body>");         
             out.println("<h1>Age Group: "+request.getParameter("ageDropDown") +" Results for parents </h1>");
+            //send printWriter, ScoreList, this for adding row, check what ageGroup have been selected
             handler.TableGenerator(out, list, this, request.getParameter("ageDropDown"));                      
             out.println("</body>");
             out.println("</html>");
