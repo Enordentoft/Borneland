@@ -51,79 +51,95 @@ public class DBHandler {
         return con;
     }
 
-    /**
-     * Sort by age and totalScore insert Place for each age group
-     *
-     * @return
-     */
-    /*  public ArrayList<ScoreObject> setRanking(){
+    public ArrayList<ScoreObject> getRanking(ArrayList<ScoreObject> list) {
+
         
-     //rankedObjectList = (ArrayList<ScoreObject>) getUpdatedScore().clone();
-     rankedObjectList = (ArrayList<ScoreObject>) scoreObjectList.clone();
-     Collections.sort(rankedObjectList,new PlaceComparator());
-     for (int i = 0; i < 4; i++) {
-     int place = 1;
-     for for (int k = 0; k < 10; k++) {
-                     
-                 
-     {
-     if(ob.getAgeGroup().equals(""+i)){
-     ob.setPlace(place);
-     if(rankedObjectList.get(rankedObjectList.indexOf(ob)).getTotalScore() != ob.getTotalScore()){
-     place++;}
-     }
-                 
-     }
-     for (ScoreObject scoreObjectList1 : rankedObjectList) {
-     System.out.println("Placing: "+ scoreObjectList1.getPlace());
-     }
-             
-     }
-         
-         
-     }
-    
-     return rankedObjectList;
-     }*/
-
-    public ArrayList<ScoreObject> setRanking(ArrayList<ScoreObject> list) {
-
-        Collections.sort(list, new PlaceComparator());
+        
         //loop each ageGroupID
-        for (int i = 0; i < 4; i++) {
+        for (int i = 1; i < 4; i++) {
             int place = 1;
+            int deltaIndex = 0;
             //Loop throuhg list
             for (int k = 0; k < list.size(); k++) {
 
                 {          //If the object has the correct ageGroup
                     if (list.get(k).getAgeGroup().equals("" + i)) {
-                        list.get(k).setPlace(place);
-
-                        if (list.get(k + 1).getTotalScore() != list.get(k).getTotalScore()) {
+                        if(deltaIndex < 1){
+                        list.get(k).setPlace(place);                            
+                        }else if (list.get(k).getTotalScore() == list.get(k-1).getTotalScore()){
+                            list.get(k).setPlace(place); 
+                        }else if (list.get(k).getTotalScore() != list.get(k-1).getTotalScore()){
                             place++;
+                            list.get(k).setPlace(place); 
                         }
-                    }
-                }
-                // handles last element, to prevent out of bounds exception
-                if (k == list.size() - 2) {
-                    if (list.get(k + 1).getTotalScore() != list.get(k).getTotalScore()) {
-                        place +=2;
-                        list.get(k + 1).setPlace(place);
-                        break;
-                    }
 
-                }
-            }
-
-            for (ScoreObject scoreObjectList1 : list) {
-                System.out.println("Placing: " + scoreObjectList1.getPlace());
+                   deltaIndex++;     
             }
 
         }
+            
+            }}
 
         return list;
     }
 
+    /*
+     public ArrayList<ScoreObject> getRanking(ArrayList<ScoreObject> list) {
+
+     Collections.sort(list, new PlaceComparator());
+     //loop each ageGroupID
+     for (int i = 0; i < 4; i++) {
+     int place = 1;
+     int deltaIndex = 0;
+     //Loop throuhg list
+     for (int k = 0; k < list.size(); k++) {
+              
+
+     {          //If the object has the correct ageGroup
+     if (list.get(k).getAgeGroup().equals("" + i)) {
+     deltaIndex++;
+     list.get(k).setPlace(""+place);
+
+     // If the next participant does not have the same score increase place
+     if (list.get(k + 1).getTotalScore() != list.get(k).getTotalScore()) {
+     place++;
+     //add X to result to indicate rematch on tie score
+     }else if(deltaIndex < 4 && list.get(k + 1).getTotalScore() == list.get(k).getTotalScore()){
+     list.get(k).setPlace("" + place+"X");
+     list.get(k+1).setPlace("" + place+"X");
+     k++;
+     }
+     }
+     }
+     // handles last element, to prevent out of bounds exception
+     if (k == list.size() - 2) {
+     if (list.get(k + 1).getTotalScore() != list.get(k).getTotalScore()) {
+     place +=1;
+     list.get(k + 1).setPlace(""+place);
+     break;
+     }else if(list.get(k + 1).getTotalScore() == list.get(k).getTotalScore()){     
+     place +=1;
+     if(deltaIndex < 4){
+     //list.get(k).setPlace("" + place+"X");
+     list.get(k+1).setPlace("" + place+"X");
+     }else{
+     list.get(k+1).setPlace("" + place+"x");
+     }
+     //k++;
+     }else {
+     //list.get(k).setPlace("" + place+"X");
+     place +=1;
+     list.get(k+1).setPlace("" + place+"Xx");
+     break;
+     }
+
+     }
+            
+     }
+     }
+
+     return list;
+     }*/
     public ArrayList<ScoreObject> getScore() throws SQLException {
         try {
 
@@ -140,15 +156,18 @@ public class DBHandler {
                 }
 
             }
-            //get names
-            scoreObjectList = getNames(scoreObjectList);
             //sort by lane and totalScore
-            Collections.sort(scoreObjectList, new PartComparator());
-            //set place (ranking)
-            setRanking(scoreObjectList);
+            //Collections.sort(scoreObjectList, new PartComparator());
 
-            for (ScoreObject scoreObjectList1 : scoreObjectList) {
-                System.out.println(scoreObjectList1.toString() + "\n");
+            //get names
+            getNames(scoreObjectList);
+            Collections.sort(scoreObjectList, new PlaceComparator());
+            //set place (ranking)
+            getRanking(scoreObjectList);
+
+            for (ScoreObject ob : scoreObjectList) {
+                System.out.println(ob.toString());
+                
             }
 
         } catch (Exception e) {

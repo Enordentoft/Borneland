@@ -121,7 +121,7 @@ public class ScoreObject {
 
     @Override
     public String toString() {
-        return " scoreID: " + scoreID + " participantID: " + participantID + " raceID: " + raceID + " roundNumber: " + roundNumber
+        return "TotalScore:" +totalScore+ " scoreID: " + scoreID + " participantID: " + participantID + " raceID: " + raceID + " roundNumber: " + roundNumber
                 + " result: " + resultList + " fName: " + fName + " lName: " + lName + " laneID: " + laneID + " numberOfRounds: " + numberOfRounds;
 
     }

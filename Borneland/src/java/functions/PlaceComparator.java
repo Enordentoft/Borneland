@@ -19,7 +19,7 @@ package functions;
         int ageGroup1 = Integer.parseInt(o1.getAgeGroup());
         int ageGroup2 = Integer.parseInt(o2.getAgeGroup());
 
-        //compare by lane
+        //compare by ageGroup
         if (ageGroup1 > ageGroup2) {
             return 1;
         } else if (ageGroup1 < ageGroup2) {
