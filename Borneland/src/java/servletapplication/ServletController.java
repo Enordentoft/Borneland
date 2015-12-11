@@ -28,7 +28,7 @@ public class ServletController extends HttpServlet {
     ArrayList<ScoreObject> list;
     AgeGroupHandler handler;
     
-    String updateTime = "2";
+    String updateTime = "4";
 
     @Override
     public void init() throws ServletException {
@@ -63,10 +63,68 @@ public class ServletController extends HttpServlet {
             out.println("<body>");         
             out.println("<h1>Age Group: "+request.getParameter("ageDropDown") +" Results for parents </h1>");
             //send printWriter, ScoreList, check what ageGroup have been selected, specify lane or set to 0 to show all
-            handler.TableGenerator(out, list, request.getParameter("ageDropDown"), 0);                      
+            requestChecker(out, list, request, response);
+            //handler.TableGenerator(out, list, request.getParameter("ageDropDown"), 0);                      
             out.println("</body>");
             out.println("</html>");
         }
+    }
+    
+    public void requestChecker(PrintWriter out, ArrayList<ScoreObject> list, HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException, ServletException{
+        
+//if request contains the SelectLane dropdown (from InputScore.html)
+        if(request.getParameter("SelectedLane") != (null)){         
+            out.println("<form action=\"ServletController\" method=\"GET\"> \n" +
+"\n" +
+"            <input type=\"submit\" value=\"GetLane\" />\n" +
+"            <select name=\"SelectedLane\">\n" +
+"                <option value=\"0\">Show All</option>\n" +
+"                <option value=\"1\">Lane 1</option>\n" +
+"                <option value=\"2\">Lane 2</option>\n" +
+"                <option value=\"3\">Lane 3</option>\n" +
+"                <option value=\"4\">Lane 4</option>\n" +
+"                <option value=\"5\">Lane 5</option>\n" +
+"                <option value=\"6\">Lane 6</option>\n" +
+"                <option value=\"7\">Lane 7</option>\n" +
+"                <option value=\"8\">Lane 8</option>\n" +
+"                <option value=\"9\">Lane 9</option>\n" +
+"                <option value=\"10\">Lane 10</option>\n" +
+"            </select>\n" +
+"\n" +
+"            <select name=\"ageDropDown\" size=\"1\">\n" +
+"                <option value=\"1\">Age 0-6</option>\n" +
+"                <option value=\"2\">Age 7-9</option>\n" +
+"                <option value=\"3\">Age 10-14</option>\n" +
+"\n" +
+"            </select>\n" +
+"\n" +
+"            <br>\n" +
+"            <br>\n" +
+"            <select name=\"ParticipantID\">\n" +
+"                <option>ParticipantID</option>           \n" +
+"            </select>\n" +
+"            <select name=\"SelectRound\">\n" +
+"                <option value=\"1\">Round 1</option>\n" +
+"                <option value=\"1\">Round 2</option>\n" +
+"                <option value=\"1\">Round 3</option>\n" +
+"                <option value=\"1\">Round 4</option>\n" +
+"                <option value=\"1\">Round 5</option>\n" +
+"                <option value=\"1\">Round 6</option>\n" +
+"            </select>\n" +
+"            <select name=\"SetResult\" >\n" +
+"                <option>-</option>\n" +
+"                <option>0</option>\n" +
+"                <option>1</option>\n" +
+"            </select>\n" +
+"            <input type=\"submit\" value=\"SubmitScore\" />\n" +
+"        </form>");            
+             handler.TableGenerator(out, list, request.getParameter("ageDropDown"), Integer.parseInt(request.getParameter("SelectedLane")));
+        }else{
+        handler.TableGenerator(out, list, request.getParameter("ageDropDown"), 0); 
+            
+        }
+        //System.out.println("/////////"+request.getParameter("ageDropDown").toString());
+        
     }
     
     

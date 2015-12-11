@@ -12,19 +12,50 @@ and open the template in the editor.
     </head>
     <body>
         <div>Input score for participants</div>
-        <input type="submit" value="GetLane" name="GetLaneButton" />
-        <select name="SelectedLane">
-            <option>Lane 1</option>
-            <option>Lane 2</option>
-            <option>Lane 3</option>
-            <option>Lane 4</option>
-            <option>Lane 5</option>
-            <option>Lane 6</option>
-            <option>Lane 7</option>
-            <option>Lane 8</option>
-            <option>Lane 9</option>
-            <option>Lane 10</option>
-        </select>
-        
+        <form action="ServletController" method="GET"> 
+
+            <input type="submit" value="GetLane" />
+            <select name="SelectedLane">
+                <option value="0">Show All</option>
+                <option value="1">Lane 1</option>
+                <option value="2">Lane 2</option>
+                <option value="3">Lane 3</option>
+                <option value="4">Lane 4</option>
+                <option value="5">Lane 5</option>
+                <option value="6">Lane 6</option>
+                <option value="7">Lane 7</option>
+                <option value="8">Lane 8</option>
+                <option value="9">Lane 9</option>
+                <option value="10">Lane 10</option>
+            </select>
+
+            <select name="ageDropDown" size="1">
+                <option value="1">Age 0-6</option>
+                <option value="2">Age 7-9</option>
+                <option value="3">Age 10-14</option>
+
+            </select>
+
+            <br>
+            <br>
+            <select name="ParticipantID">
+                <option>ParticipantID</option>           
+            </select>
+            <select name="SelectRound">
+                <option value="1">Round 1</option>
+                <option value="1">Round 2</option>
+                <option value="1">Round 3</option>
+                <option value="1">Round 4</option>
+                <option value="1">Round 5</option>
+                <option value="1">Round 6</option>
+            </select>
+            <select name="SetResult" >
+                <option>-</option>
+                <option>0</option>
+                <option>1</option>
+            </select>
+            <input type="submit" value="SubmitScore" />
+        </form>
+
     </body>
 </html>
