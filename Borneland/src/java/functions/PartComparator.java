@@ -16,7 +16,7 @@ public class PartComparator implements java.util.Comparator<ScoreObject> {
 
     @Override
     public int compare(ScoreObject o1, ScoreObject o2) {
-        int lane1 = Integer.parseInt(o1.getLaneID());
+     /*   int lane1 = Integer.parseInt(o1.getLaneID());
         int lane2 = Integer.parseInt(o2.getLaneID());
         int totalScore1 = o1.getTotalScore();
         int totalScore2 = o2.getTotalScore();
@@ -36,8 +36,8 @@ public class PartComparator implements java.util.Comparator<ScoreObject> {
                 return 0;
             }
 
-            }
-
+            }*/
+            return -1; //remove if uncommenting above
         }   
 
     }

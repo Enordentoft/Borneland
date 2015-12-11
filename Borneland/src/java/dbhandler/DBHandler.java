@@ -1,6 +1,5 @@
 package dbhandler;
 
-import functions.PartComparator;
 import functions.PlaceComparator;
 import functions.ScoreObject;
 import java.sql.Connection;
@@ -10,7 +9,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -37,7 +35,7 @@ public class DBHandler {
 
     }
 
-    public void createConnection() {
+    private void createConnection() {
         try {
             String connectionUrl = "jdbc:sqlserver://192.168.100.106;user=Michael;password=123;";
             con = DriverManager.getConnection(connectionUrl);
@@ -47,11 +45,12 @@ public class DBHandler {
         }
     }
 
+     //should be singleton?   
     public Connection getConnecion() {
         return con;
     }
 
-    public ArrayList<ScoreObject> getRanking(ArrayList<ScoreObject> list) {
+    private ArrayList<ScoreObject> getRanking(ArrayList<ScoreObject> list) {
 
         
         
@@ -140,7 +139,7 @@ public class DBHandler {
 
      return list;
      }*/
-    public ArrayList<ScoreObject> getScore() throws SQLException {
+    private ArrayList<ScoreObject> getScore() throws SQLException {
         try {
 
             //String q = "SELECT * FROM BornelandDB.dbo.scores";
@@ -178,8 +177,13 @@ public class DBHandler {
         return scoreObjectList;
 
     }
-
-    public boolean checkID(String ID, String result) {
+    /**
+     * if returns true if the id already exists, and adds result to the existing object
+     * @param ID
+     * @param result
+     * @return 
+     */
+    private boolean checkID(String ID, String result) {
         if (scoreObjectList.isEmpty()) {
             return false;
         } else {
@@ -195,7 +199,12 @@ public class DBHandler {
         }
     }
 
-    public ArrayList<ScoreObject> getNames(ArrayList<ScoreObject> list) {
+    /**
+     * Adds name and other extra data to the ScoreObjects
+     * @param list
+     * @return 
+     */
+    private ArrayList<ScoreObject> getNames(ArrayList<ScoreObject> list) {
         try {
             for (int i = 0; i < list.size(); i++) {
                 String q = "EXECUTE getScoreSecond @participantID=" + list.get(i).getParticipantID();

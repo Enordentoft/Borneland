@@ -12,9 +12,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -31,9 +28,7 @@ public class ServletController extends HttpServlet {
     ArrayList<ScoreObject> list;
     AgeGroupHandler handler;
     
-    String tableRow;
-    String tableRound;
-    String updateTime = "";
+    String updateTime = "2";
 
     @Override
     public void init() throws ServletException {
@@ -67,12 +62,14 @@ public class ServletController extends HttpServlet {
             out.println("</head>");
             out.println("<body>");         
             out.println("<h1>Age Group: "+request.getParameter("ageDropDown") +" Results for parents </h1>");
-            //send printWriter, ScoreList, this for adding row, check what ageGroup have been selected
-            handler.TableGenerator(out, list, this, request.getParameter("ageDropDown"));                      
+            //send printWriter, ScoreList, check what ageGroup have been selected, specify lane or set to 0 to show all
+            handler.TableGenerator(out, list, request.getParameter("ageDropDown"), 0);                      
             out.println("</body>");
             out.println("</html>");
         }
     }
+    
+    
     
     
     /*public void print(PrintWriter out) throws SQLException {
@@ -147,44 +144,7 @@ public class ServletController extends HttpServlet {
 
     }*/
 
-    /**
-     * adds a row for each participant object
-     *
-     * @param partID
-     * @param fName
-     * @param lName
-     * @param round
-     * @param numberOfRounds
-     * @param result
-     * @param place
-     * @param totalScore
-     * @return
-     */
-    public String addTableRow(String partID, String fName, String lName, String round, String numberOfRounds, List<String> result, String place, int totalScore) {
-        tableRound = "";
-        tableRow = "<tbody>\n"
-                + "<tr>\n"
-                + "                    <td>" + partID + "</td>\n"
-                + "                    <td>" + fName + "</td>\n"
-                + "                    <td>" + lName + "</td>\n";
-        
-        //adds row cells based on numberOfRounds
-        for (int i = 0; i < Integer.parseInt(numberOfRounds); i++) {
-            //adds scores
-            //System.out.println("+++++++++++++++++++++++++"+result.get(i));
-            tableRound += "<td>" + ((i < result.size()) ? result.get(i) : "") + "</td>\n";
-        }
-
-        /* for (int i = 1; i < Integer.parseInt(numberOfRounds)+1; i++) {
-         //adds score to the correct round
-         tableRound += "<td>" + (Integer.parseInt(round) == i ? result : "")+"</td>\n";}*/
-        tableRow += tableRound;
-        tableRow += "<td>" + totalScore + "</td>\n"
-                + "<td>" + place + "</td>\n"
-                +//11
-                "</tr>";
-        return tableRow;
-    }
+   
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
