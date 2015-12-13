@@ -12,7 +12,9 @@ and open the template in the editor.
     </head>
     <body>
         <div>Input score for participants</div>
-        <form action="ServletController" method="GET"> 
+
+        <form action="ServletController" method="POST">   
+            <input type="hidden" name="type" value="scoreAdmin" />
 
             <input type="submit" value="GetLane" />
             <select name="SelectedLane">
@@ -34,28 +36,31 @@ and open the template in the editor.
                 <option value="2">Age 7-9</option>
                 <option value="3">Age 10-14</option>
 
-            </select>
-
+            </select>   
+            
             <br>
             <br>
             <select name="ParticipantID">
                 <option>ParticipantID</option>           
             </select>
             <select name="SelectRound">
+                <option value="0">Round -</option>
                 <option value="1">Round 1</option>
-                <option value="1">Round 2</option>
-                <option value="1">Round 3</option>
-                <option value="1">Round 4</option>
-                <option value="1">Round 5</option>
-                <option value="1">Round 6</option>
+                <option value="2">Round 2</option>
+                <option value="3">Round 3</option>
+                <option value="4">Round 4</option>
+                <option value="5">Round 5</option>
+                <option value="6">Round 6</option>
             </select>
             <select name="SetResult" >
                 <option>-</option>
                 <option>0</option>
                 <option>1</option>
             </select>
-            <input type="submit" value="SubmitScore" />
-        </form>
+            <input type="submit" value="SubmitScore" />  
+            <input type="submit" value="SubmitScore" />  
+        </form>      
+            
 
     </body>
 </html>

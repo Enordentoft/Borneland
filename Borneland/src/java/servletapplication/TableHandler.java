@@ -15,7 +15,7 @@ import java.util.List;
  *
  * @author Michael
  */
-public class AgeGroupHandler {
+public class TableHandler {
 
     private String tableRow;
     private String tableRound;
@@ -25,7 +25,15 @@ public class AgeGroupHandler {
      
      
 
-    
+    /**
+     * Creates headings for the table, and closes when done
+     * 
+     * @param out
+     * @param list
+     * @param ageGroupIn
+     * @param wantedLane
+     * @throws SQLException 
+     */
     public void TableGenerator(PrintWriter out, ArrayList<ScoreObject> list, String ageGroupIn, int wantedLane) throws SQLException {
         
         //If a wantedLane is specifid // use regex?
@@ -35,9 +43,7 @@ public class AgeGroupHandler {
         }else{
             fLane = 1;
             lLane = 10;
-        }
-       
-        
+        }        
         //print for each lane - 10 lanes hardcoded
         for (int l = fLane; l < lLane; l++) {
             int numberOfRounds = 10;
@@ -49,9 +55,7 @@ public class AgeGroupHandler {
                     ageGroup = Integer.parseInt(ob.getAgeGroup());
                     break;
                 }
-
             }
-
             //Loops through each object
             for (int i = 0; i < list.size(); i++) {
                 //only generate lanes with the correct ageGroup        
@@ -75,6 +79,7 @@ public class AgeGroupHandler {
                             + "<th>Place</th>\n"
                             + "</tr>\n"
                             + "</thead>");
+                   
                     if (list.get(i).getAgeGroup().equals(ageGroupIn) && list.get(i).getLaneID().equals("" + l)) {
                         out.println(addTableRow(list.get(i).getParticipantID(), list.get(i).getfName(), list.get(i).getlName(), list.get(i).getRoundNumber(), list.get(i).getNumberOfRounds(), list.get(i).getResultList(), "" + list.get(i).getPlace(), list.get(i).getTotalScore()));
                     }
@@ -93,6 +98,7 @@ public class AgeGroupHandler {
             }
         }
     }
+    
 
     /**
      * adds a row for each participant object

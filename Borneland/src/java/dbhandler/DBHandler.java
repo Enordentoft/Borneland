@@ -50,10 +50,7 @@ public class DBHandler {
         return con;
     }
 
-    private ArrayList<ScoreObject> getRanking(ArrayList<ScoreObject> list) {
-
-        
-        
+    private ArrayList<ScoreObject> getRanking(ArrayList<ScoreObject> list) {        
         //loop each ageGroupID
         for (int i = 1; i < 4; i++) {
             int place = 1;
@@ -75,10 +72,8 @@ public class DBHandler {
                    deltaIndex++;     
             }
 
-        }
-            
+        }            
             }}
-
         return list;
     }
 
@@ -224,6 +219,17 @@ public class DBHandler {
         }
         return list;
     }
+    
+    public ArrayList<String> getParticipantsOnLane(int laneID){
+        ArrayList<String> list = new ArrayList<>();
+        for (ScoreObject obj : getUpdatedList()) {
+            if(obj.getLaneID().equals(""+laneID)){
+                list.add(obj.getParticipantID());
+            }
+        }
+        return list;
+    }   
+ 
 
     /**
      * Return a new scoreObjectList from database if last update was more than
@@ -231,7 +237,7 @@ public class DBHandler {
      *
      * @return
      */
-    public ArrayList<ScoreObject> getUpdatedScore() {
+    public ArrayList<ScoreObject> getUpdatedList() {
         currentUpdate = System.currentTimeMillis();
         int waitTime = 2;
         System.out.println("Time since last update:" + (currentUpdate - lastUpdate) / 1000);

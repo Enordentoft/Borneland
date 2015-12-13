@@ -13,7 +13,9 @@ and open the template in the editor.
     </head>
     <body>      
 
-        <form action="ServletController" method="GET">            
+        <form action="ServletController" method="GET">   
+            <input type="hidden" name="type" value="index" />
+            
             <input type="submit" value="ShowTables" />  
             <select name="ageDropDown" size="1">
                 <option value="1">Age 0-6</option>
