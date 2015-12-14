@@ -30,7 +30,8 @@ public class ServletController extends HttpServlet {
     private TableHandler handler;
     private String[] laneSelected, ageSelected, ageGroup; 
     
-    private String age, updateTime = "4";
+    private String updateTime = "4";
+    private String age = "0";
 
     @Override
     public void init() throws ServletException {
@@ -57,7 +58,9 @@ public class ServletController extends HttpServlet {
             throws ServletException, IOException, SQLException {
         response.setContentType("text/html;charset=UTF-8");
         list = db.getUpdatedList();
-        age = ageGroup[Integer.parseInt(request.getParameter("ageDropDown"))];
+      /*  if(ageGroup[Integer.parseInt(request.getParameter("ageDropDown"))] != null){
+        age = ageGroup[Integer.parseInt(request.getParameter("ageDropDown"))];            
+        }*/
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
             out.println("<!DOCTYPE html>");
@@ -67,7 +70,8 @@ public class ServletController extends HttpServlet {
             out.println("<title>Servlet ServletOne</title>");
             out.println("</head>");
             out.println("<body>");         
-            out.println("<h1>Age Group " + age + ": Results for parents </h1>");
+            //out.println("<h1>Age Group " + age + ": Results for parents </h1>");
+            out.println("<h1>Age Group " + request.getParameter("ageDropDown") + ": Results for parents </h1>");
             //send printWriter, ScoreList, check what ageGroup have been selected, specify lane or set to 0 to show all
             requestChecker(out, list, request);
             //handler.TableGenerator(out, list, request.getParameter("ageDropDown"), 0);                      
@@ -81,7 +85,7 @@ public class ServletController extends HttpServlet {
 //if request contains the SelectLane dropdown (from InputScore.html)
             System.out.println("//////////////" +request.getParameter("type"));
            // System.out.println("//////////////" + laneSelected[1]);
-            
+            if(request != null){
         if(request.getParameter("type").equals("scoreAdmin")){  
             int laneID = Integer.parseInt(request.getParameter("SelectedLane"));
             //Stop updating when in scoreAdmin mode
@@ -98,7 +102,7 @@ public class ServletController extends HttpServlet {
 "\n" +
 "            <input type=\"submit\" value=\"GetLane\" />\n" +
 "            <select name=\"SelectedLane\">\n" +
-"                <option "+ laneSelected[0]+" value=\"0\">Show All</option>\n" +
+"                <option "+ laneSelected[0]+" value=\"-\">Show All</option>\n" +
 "                <option "+ laneSelected[1]+" value=\"1\">Lane 1</option>\n" +
 "                <option "+ laneSelected[2]+" value=\"2\">Lane 2</option>\n" +
 "                <option "+ laneSelected[3]+" value=\"3\">Lane 3</option>\n" +
@@ -120,18 +124,21 @@ public class ServletController extends HttpServlet {
 "            \n" +
 "            <br>\n" +
 "            <br>\n" +
-"            <select name=\"ParticipantID\">\n");
+"            <select name=\"ParticipantID\">\n"
+                    + "<option value=\"-\">ParticipantID</option> ");
                     //method for printing participant id
                     participansOnLane(laneID, out);
 out.println("            </select>\n" +
 "            <select name=\"SelectRound\">\n" +
         "<option value=\"0\">Round -</option>\n" +
 "                <option value=\"1\">Round 1</option>\n" +
-"                <option value=\"1\">Round 2</option>\n" +
-"                <option value=\"1\">Round 3</option>\n" +
-"                <option value=\"1\">Round 4</option>\n" +
-"                <option value=\"1\">Round 5</option>\n" +
-"                <option value=\"1\">Round 6</option>\n" +
+"                <option value=\"2\">Round 2</option>\n" +
+"                <option value=\"3\">Round 3</option>\n" +
+"                <option value=\"4\">Round 4</option>\n" +
+"                <option value=\"5\">Round 5</option>\n" +
+"                <option value=\"6\">Round 6</option>\n" +
+"                <option value=\"7\">Round 6</option>\n" +
+"                <option value=\"8\">Round 6</option>\n" +
 "            </select>\n" +
 "            <select name=\"SetResult\" >\n" +
 "                <option>-</option>\n" +
@@ -145,13 +152,15 @@ out.println("            </select>\n" +
             Arrays.fill(laneSelected, "");
             Arrays.fill(ageSelected, "");
              handler.TableGenerator(out, list, request.getParameter("ageDropDown"), Integer.parseInt(request.getParameter("SelectedLane")));
+                         updateCheck(request.getParameter("SelectedLane"),request.getParameter("ParticipantID"),request.getParameter("SelectRound"),request.getParameter("SetResult"));
+
         }else{
             //set update time for parents
             updateTime = "2";
             //shows all lanes because last parameter is 0
         handler.TableGenerator(out, list, request.getParameter("ageDropDown"), 0); 
             
-        }
+        }}
         //System.out.println("/////////"+request.getParameter("ageDropDown").toString());
         
     }
@@ -175,8 +184,13 @@ out.println("            </select>\n" +
         //participansOnLane(laneID, out);
     }
     
-    public void addPointToDB(String laneID, String participantID, String round, String Score){
+    public void updateCheck(String laneID, String participantID, String roundNumber, String result){
         
+       if(!laneID.equals("-")&&!participantID.equals("-")&&!roundNumber.equals("-")&&!result.equals("-")){
+           db.updateScore(laneID, participantID, roundNumber, result);
+           System.out.println("UPDATE SUCCESS!!");
+       }
+        System.out.println("////////////" + "DID NOT UPDATE");
     }
     
 

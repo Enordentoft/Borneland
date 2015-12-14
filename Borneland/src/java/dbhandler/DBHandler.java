@@ -24,6 +24,7 @@ import java.util.logging.Logger;
 public class DBHandler {
 
     long lastUpdate, currentUpdate;
+    long waitTime = 2;
     ArrayList<ScoreObject> scoreObjectList;
     //ArrayList<ScoreObject> rankedObjectList;
     Connection con;
@@ -239,7 +240,7 @@ public class DBHandler {
      */
     public ArrayList<ScoreObject> getUpdatedList() {
         currentUpdate = System.currentTimeMillis();
-        int waitTime = 2;
+        waitTime = 2;
         System.out.println("Time since last update:" + (currentUpdate - lastUpdate) / 1000);
 
         //Get list from database
@@ -258,6 +259,22 @@ public class DBHandler {
         //get old list
         return scoreObjectList;
 
+    }
+    
+    public void updateScore(String laneID, String participantID, String roundNumber, String result){
+        try {
+            String sql = "EXECUTE updateScore @laneID = "+laneID+", @participantID = "+ participantID
+                    + ", @roundNumber = "+roundNumber+", @result =  " + result;
+            Statement st = con.createStatement();
+            int rowsAffected = st.executeUpdate(sql);
+            System.out.println("ROWS AFFECTED IN DB UPDATE" + rowsAffected);
+            System.out.println("laneID" + laneID +"participantID" + participantID+"roundNumber" + roundNumber+"result" + result);
+            currentUpdate += (waitTime*1000);
+            //EXECUTE updateScore @laneID = 1, @participantID = 1, @roundNumber = 1, @result = 1
+        } catch (SQLException ex) {
+            Logger.getLogger(DBHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    
     }
 
 }
