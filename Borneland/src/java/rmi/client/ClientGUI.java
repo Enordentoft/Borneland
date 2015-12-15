@@ -62,6 +62,11 @@ public class ClientGUI extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jButton1.setText("Create");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         lName.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -73,7 +78,7 @@ public class ClientGUI extends javax.swing.JFrame {
 
         jLabel2.setText("First Name");
 
-        jLabel3.setText("Participant ID");
+        jLabel3.setText("Age group");
 
         jLabel4.setText("E-mail");
 
@@ -164,7 +169,7 @@ public class ClientGUI extends javax.swing.JFrame {
                             .addComponent(lName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(ageGroupID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 227, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 217, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -180,9 +185,9 @@ public class ClientGUI extends javax.swing.JFrame {
             Registry registry = LocateRegistry.getRegistry("localhost", 1099);
             System.setSecurityManager(new SecurityManager());
 
-            client = new ClientHandler(this); //Creates a Client giving it a name from the Username TextField.            
+            client = new ClientHandler(this); 
             server = (IServer) registry.lookup("rmi://localhost/adminServer"); //Getting the Stub.
-            server.login(client); //Loggin' in to the server using the client we created earlier.
+            server.login(client); 
         } catch (AccessException ex) {
             Logger.getLogger(ClientGUI.class.getName()).log(Level.SEVERE, null, ex);
         } catch (RemoteException ex) {
@@ -191,6 +196,14 @@ public class ClientGUI extends javax.swing.JFrame {
             Logger.getLogger(ClientGUI.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        try {
+            server.Create(fName.getText(), lName.getText(), ageGroupID.getText(), email.getText(), laneID.getText(), client);
+        } catch (RemoteException ex) {
+            ex.printStackTrace();
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments

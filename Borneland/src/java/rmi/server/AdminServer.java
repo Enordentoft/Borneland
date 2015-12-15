@@ -20,28 +20,26 @@ import rmi.common.IServer;
  * @author Michael
  */
 public class AdminServer {
-    
+
     public static void main(String[] args) {
         AdminServer server = new AdminServer();
         server.createConnection();
     }
- 
-    
-    public void createConnection(){
+
+    public void createConnection() {
         try {
             Registry registry = java.rmi.registry.LocateRegistry.createRegistry(1099); //Create a registry, this is the first server that starts up
             System.setSecurityManager(new SecurityManager());
-            Context namingContext = new InitialContext();
+            //Context namingContext = new InitialContext();
             IServer server = new ServerHandler();
             registry.rebind("rmi://localhost/adminServer", server); //Bind the server to the registry
-            
+
         } catch (AccessException ex) {
             Logger.getLogger(AdminServer.class.getName()).log(Level.SEVERE, null, ex);
-        }catch (RemoteException ex) {
+        } catch (RemoteException ex) {
             Logger.getLogger(AdminServer.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (NamingException ex) {
-            Logger.getLogger(AdminServer.class.getName()).log(Level.SEVERE, null, ex);
-        } 
+
+        }
     }
-    
+
 }

@@ -46,12 +46,12 @@ public class DBHandler {
         }
     }
 
-     //should be singleton?   
+    //should be singleton?   
     public Connection getConnecion() {
         return con;
     }
 
-    private ArrayList<ScoreObject> getRanking(ArrayList<ScoreObject> list) {        
+    private ArrayList<ScoreObject> getRanking(ArrayList<ScoreObject> list) {
         //loop each ageGroupID
         for (int i = 1; i < 4; i++) {
             int place = 1;
@@ -61,20 +61,21 @@ public class DBHandler {
 
                 {          //If the object has the correct ageGroup
                     if (list.get(k).getAgeGroup().equals("" + i)) {
-                        if(deltaIndex < 1){
-                        list.get(k).setPlace(place);                            
-                        }else if (list.get(k).getTotalScore() == list.get(k-1).getTotalScore()){
-                            list.get(k).setPlace(place); 
-                        }else if (list.get(k).getTotalScore() != list.get(k-1).getTotalScore()){
+                        if (deltaIndex < 1) {
+                            list.get(k).setPlace(place);
+                        } else if (list.get(k).getTotalScore() == list.get(k - 1).getTotalScore()) {
+                            list.get(k).setPlace(place);
+                        } else if (list.get(k).getTotalScore() != list.get(k - 1).getTotalScore()) {
                             place++;
-                            list.get(k).setPlace(place); 
+                            list.get(k).setPlace(place);
                         }
 
-                   deltaIndex++;     
-            }
+                        deltaIndex++;
+                    }
 
-        }            
-            }}
+                }
+            }
+        }
         return list;
     }
 
@@ -162,7 +163,7 @@ public class DBHandler {
 
             for (ScoreObject ob : scoreObjectList) {
                 System.out.println(ob.toString());
-                
+
             }
 
         } catch (Exception e) {
@@ -173,11 +174,14 @@ public class DBHandler {
         return scoreObjectList;
 
     }
+
     /**
-     * if returns true if the id already exists, and adds result to the existing object
+     * returns true if the id already exists, and adds result to the existing
+     * object
+     *
      * @param ID
      * @param result
-     * @return 
+     * @return
      */
     private boolean checkID(String ID, String result) {
         if (scoreObjectList.isEmpty()) {
@@ -197,8 +201,9 @@ public class DBHandler {
 
     /**
      * Adds name and other extra data to the ScoreObjects
+     *
      * @param list
-     * @return 
+     * @return
      */
     private ArrayList<ScoreObject> getNames(ArrayList<ScoreObject> list) {
         try {
@@ -220,17 +225,16 @@ public class DBHandler {
         }
         return list;
     }
-    
-    public ArrayList<String> getParticipantsOnLane(int laneID){
+
+    public ArrayList<String> getParticipantsOnLane(int laneID) {
         ArrayList<String> list = new ArrayList<>();
         for (ScoreObject obj : getUpdatedList()) {
-            if(obj.getLaneID().equals(""+laneID)){
+            if (obj.getLaneID().equals("" + laneID)) {
                 list.add(obj.getParticipantID());
             }
         }
         return list;
-    }   
- 
+    }
 
     /**
      * Return a new scoreObjectList from database if last update was more than
@@ -240,7 +244,7 @@ public class DBHandler {
      */
     public ArrayList<ScoreObject> getUpdatedList() {
         currentUpdate = System.currentTimeMillis();
-        waitTime = 2;
+        waitTime = 20;
         System.out.println("Time since last update:" + (currentUpdate - lastUpdate) / 1000);
 
         //Get list from database
@@ -260,21 +264,60 @@ public class DBHandler {
         return scoreObjectList;
 
     }
-    
-    public void updateScore(String laneID, String participantID, String roundNumber, String result){
+
+    /**
+     * update a participants score for a specific round
+     *
+     * @param laneID
+     * @param participantID
+     * @param roundNumber
+     * @param result
+     */
+    public void updateScore(String laneID, String participantID, String roundNumber, String result) {
         try {
-            String sql = "EXECUTE updateScore @laneID = "+laneID+", @participantID = "+ participantID
-                    + ", @roundNumber = "+roundNumber+", @result =  " + result;
+            String sql = "EXECUTE updateScore @laneID = " + laneID + ", @participantID = " + participantID
+                    + ", @roundNumber = " + roundNumber + ", @result =  " + result;
             Statement st = con.createStatement();
             int rowsAffected = st.executeUpdate(sql);
             System.out.println("ROWS AFFECTED IN DB UPDATE" + rowsAffected);
-            System.out.println("laneID" + laneID +"participantID" + participantID+"roundNumber" + roundNumber+"result" + result);
-            currentUpdate += (waitTime*1000);
+            System.out.println("laneID" + laneID + "participantID" + participantID + "roundNumber" + roundNumber + "result" + result);
+            //reset update time
+            resetUpdateTimer();
             //EXECUTE updateScore @laneID = 1, @participantID = 1, @roundNumber = 1, @result = 1
         } catch (SQLException ex) {
             Logger.getLogger(DBHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
-    
+
+    }
+
+    public ResultSet createParticipant(String fName, String lName, String ageGroupID, String email, String laneID) throws SQLException {
+        String sql = "EXECUTE createParticipant @firstName = '" + fName + "', @lastName = '" + lName + "', @ageGroupID = " + ageGroupID + ", @email = '" + email + "', @laneID = " + laneID;
+        Statement st = con.createStatement();
+        boolean createCheck = st.execute(sql);
+        sql = "EXECUTE returnCreateParticipant @laneID = " + laneID;
+        ResultSet rs = st.executeQuery(sql);
+        
+        int rounds;
+        
+        if(ageGroupID.equals("1")){
+            rounds = 6;
+        }else {
+            rounds = 8;
+        }
+        
+        for (int i = 0; i < rounds; i++) {
+            sql = "EXECUTE createScore @laneID = "+laneID;
+            st = con.createStatement();
+            st.execute(sql);
+            
+        }
+
+        //System.out.println("createCheck dbHandler" +createCheck);
+        return rs;
+    }
+
+    public void resetUpdateTimer() {
+        lastUpdate -= (waitTime * 1000);
     }
 
 }

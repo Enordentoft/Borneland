@@ -31,6 +31,7 @@ public class ServletController extends HttpServlet {
     private String[] laneSelected, ageSelected, ageGroup; 
     
     private String updateTime = "4";
+    private String updateTimeAdmin = "";
     private String age = "0";
 
     @Override
@@ -66,7 +67,7 @@ public class ServletController extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<meta http-equiv=\"refresh\" content=\""+updateTime+"\">");
+            out.println("<meta http-equiv=\"refresh\" content=\""+(request.getParameter("type".equals("scoreAdmin") ? updateTimeAdmin : updateTime))+"\">");
             out.println("<title>Servlet ServletOne</title>");
             out.println("</head>");
             out.println("<body>");         
@@ -84,12 +85,11 @@ public class ServletController extends HttpServlet {
         
 //if request contains the SelectLane dropdown (from InputScore.html)
             System.out.println("//////////////" +request.getParameter("type"));
-           // System.out.println("//////////////" + laneSelected[1]);
-            if(request != null){
+           // System.out.println("//////////////" + laneSelected[1]);          
         if(request.getParameter("type").equals("scoreAdmin")){  
             int laneID = Integer.parseInt(request.getParameter("SelectedLane"));
             //Stop updating when in scoreAdmin mode
-            updateTime = "";
+            //updateTime = "";
             //lane
             laneSelected[laneID] = "selected=\"selected\""; 
             //"+ laneSelected[0]+"
@@ -154,13 +154,13 @@ out.println("            </select>\n" +
              handler.TableGenerator(out, list, request.getParameter("ageDropDown"), Integer.parseInt(request.getParameter("SelectedLane")));
                          updateCheck(request.getParameter("SelectedLane"),request.getParameter("ParticipantID"),request.getParameter("SelectRound"),request.getParameter("SetResult"));
 
-        }else{
+        }else if(request.getParameter("type").equals("index")){
             //set update time for parents
-            updateTime = "2";
+           // updateTime = "2";
             //shows all lanes because last parameter is 0
         handler.TableGenerator(out, list, request.getParameter("ageDropDown"), 0); 
             
-        }}
+        }
         //System.out.println("/////////"+request.getParameter("ageDropDown").toString());
         
     }

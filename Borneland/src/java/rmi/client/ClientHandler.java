@@ -17,15 +17,19 @@ import rmi.common.IClient;
 public class ClientHandler extends UnicastRemoteObject implements IClient{
     
     ClientGUI gui;
+    JTextArea guiText;
     
     public ClientHandler(ClientGUI gui) throws RemoteException{
-        this.gui = gui;        
+        this.gui = gui;    
+        guiText = gui.getTextArea();
     }
 
     @Override
-    public void response(String text) throws RemoteException {
-        JTextArea guiText = gui.getTextArea();
-        guiText.append(text+"\n");
+    public void response(String text) throws RemoteException {        
+        guiText.append(text+"\n");        
     }
+    
+    
+    
     
 }
