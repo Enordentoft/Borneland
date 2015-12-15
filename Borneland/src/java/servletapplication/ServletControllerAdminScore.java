@@ -72,7 +72,7 @@ public class ServletControllerAdminScore extends HttpServlet {
             out.println("</head>");
             out.println("<body>");         
             //out.println("<h1>Age Group " + age + ": Results for parents </h1>");
-            out.println("<h1>Age Group " + ageGroup[Integer.parseInt(request.getParameter("ageDropDown"))] + ": Results for parents </h1>");
+            out.println("<h1>Admin Score Input: Age Group " + ageGroup[Integer.parseInt(request.getParameter("ageDropDown"))] + "</h1>");
             //send printWriter, ScoreList, check what ageGroup have been selected, specify lane or set to 0 to show all
             requestChecker(out, list, request);
             //handler.TableGenerator(out, list, request.getParameter("ageDropDown"), 0);                      
@@ -134,8 +134,8 @@ out.println("            </select>\n" +
 "                <option value=\"4\">Round 4</option>\n" +
 "                <option value=\"5\">Round 5</option>\n" +
 "                <option value=\"6\">Round 6</option>\n" +
-"                <option value=\"7\">Round 6</option>\n" +
-"                <option value=\"8\">Round 6</option>\n" +
+"                <option value=\"7\">Round 7</option>\n" +
+"                <option value=\"8\">Round 8</option>\n" +
 "            </select>\n" +
 "            <select name=\"SetResult\" >\n" +
 "                <option>-</option>\n" +

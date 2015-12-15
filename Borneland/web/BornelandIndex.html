@@ -12,11 +12,11 @@ and open the template in the editor.
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
     </head>
     <body>      
-
+<h1>Tilting competition</h1>
         <form action="ServletControllerParentView" method="GET">   
             <input type="hidden" name="type" value="index" />
             
-            <input type="submit" value="ShowTables" />  
+            <input type="submit" value="Results" />  
             <select name="ageDropDown" size="1">
                 <option value="1">Age 0-6</option>
                 <option value="2">Age 7-9</option>
@@ -24,34 +24,24 @@ and open the template in the editor.
 
             </select>
 
-        </form>        
-        <form action="WinnersAndRematch.html">
-            <input type="submit" value="Winners" name="ScoreAdminButton" />
+        </form>   
+        <br>
+        <form action="ServletControllerRanking" method="GET">   
+            <input type="hidden" name="type" value="ranking" />
+            
+            <input type="submit" value="Winners" />  
+            <select name="ageDropDown" size="1">
+                <option value="1">Age 0-6</option>
+                <option value="2">Age 7-9</option>
+                <option value="3">Age 10-14</option>
+                   
+            </select>
+
         </form>
+        <br>
         <form action="InputScore.html">
             <input type="submit" value="ScoreAdmin" name="ScoreAdminButton" />
         </form>
-
-
-        <div>TODO write content</div>
-        <table border="1">
-            <thead >
-                <tr >                    
-                    <th>felt1</th>
-                    <th>felt2</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>333</td>
-                    <td>444</td>
-                </tr>
-                <tr>
-                    <td>555</td>
-                    <td>666</td>
-                </tr>
-            </tbody>
-        </table>
 
     </body>
 </html>

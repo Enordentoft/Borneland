@@ -70,7 +70,7 @@ public class ServletControllerParentView extends HttpServlet {
             out.println("</head>");
             out.println("<body>");         
             //out.println("<h1>Age Group " + age + ": Results for parents </h1>");
-            out.println("<h1>Age Group " + ageGroup[Integer.parseInt(request.getParameter("ageDropDown"))] + ": Results for parents </h1>");
+            out.println("<h1>Results: Age Group " + ageGroup[Integer.parseInt(request.getParameter("ageDropDown"))] + "</h1>");
             //send printWriter, ScoreList, check what ageGroup have been selected, specify lane or set to 0 to show all
             requestChecker(out, list, request);
             //handler.TableGenerator(out, list, request.getParameter("ageDropDown"), 0);                      
