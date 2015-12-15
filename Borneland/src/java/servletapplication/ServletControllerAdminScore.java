@@ -30,8 +30,7 @@ public class ServletControllerAdminScore extends HttpServlet {
     private TableHandler handler;
     private String[] laneSelected, ageSelected, ageGroup; 
     
-    private String updateTime = "4";
-    private String updateTimeAdmin = "";
+    //private String updateTime = "";    
     private String age = "0";
 
     @Override
@@ -67,7 +66,7 @@ public class ServletControllerAdminScore extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<meta http-equiv=\"refresh\" content=\""+(request.getParameter("type".equals("scoreAdmin") ? updateTimeAdmin : updateTime))+"\">");
+            //out.println("<meta http-equiv=\"refresh\" content=\"\">");
             out.println("<title>Servlet ServletOne</title>");
             out.println("</head>");
             out.println("<body>");         
