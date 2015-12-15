@@ -9,6 +9,10 @@
         <servlet-name>ServletControllerAdminScore</servlet-name>
         <servlet-class>servletapplication.ServletControllerAdminScore</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ServletControllerRanking</servlet-name>
+        <servlet-class>servletapplication.ServletControllerRanking</servlet-class>
+    </servlet>
    
       <servlet-mapping>
         <servlet-name>ServletControllerAdminScore</servlet-name>
@@ -17,6 +21,10 @@
     <servlet-mapping>
         <servlet-name>ServletControllerParentView</servlet-name>
         <url-pattern>/ServletControllerParentView</url-pattern>
+    </servlet-mapping>
+      <servlet-mapping>
+        <servlet-name>ServletControllerRanking</servlet-name>
+        <url-pattern>/ServletControllerRanking</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

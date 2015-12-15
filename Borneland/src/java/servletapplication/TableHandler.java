@@ -26,7 +26,7 @@ public class TableHandler {
      
 
     /**
-     * Creates headings for the table, and closes when done
+     * Creates headings for the table, prints rows and closes table when done.
      * 
      * @param out
      * @param list
@@ -44,7 +44,7 @@ public class TableHandler {
             fLane = 1;
             lLane = 10;
         }        
-        //print for each lane - 10 lanes hardcoded
+        //print for each lane 
         for (int l = fLane; l < lLane; l++) {
             int numberOfRounds = 10;
             int ageGroup = 0;
@@ -79,7 +79,7 @@ public class TableHandler {
                             + "<th>Place</th>\n"
                             + "</tr>\n"
                             + "</thead>");
-                   
+                   //add first row
                     if (list.get(i).getAgeGroup().equals(ageGroupIn) && list.get(i).getLaneID().equals("" + l)) {
                         out.println(addTableRow(list.get(i).getParticipantID(), list.get(i).getfName(), list.get(i).getlName(), list.get(i).getRoundNumber(), list.get(i).getNumberOfRounds(), list.get(i).getResultList(), "" + list.get(i).getPlace(), list.get(i).getTotalScore()));
                     }
@@ -133,6 +133,81 @@ public class TableHandler {
                 +//11
                 "</tr>";
         return tableRow;
+    }
+    
+        /**
+     * Creates headings for the table, prints rows and closes table when done.
+     * Only prints participants with rank 1-3
+     * 
+     * @param out
+     * @param list
+     * @param ageGroupIn
+     * @param wantedLane
+     * @throws SQLException 
+     */
+    public void TableGeneratorForTopRanking(PrintWriter out, ArrayList<ScoreObject> list, String ageGroupIn, int wantedLane) throws SQLException {
+        
+        //If a wantedLane is specifid // use regex?
+        if(wantedLane != 0){
+            fLane = wantedLane;
+            lLane = wantedLane+1;
+        }else{
+            fLane = 1;
+            lLane = 10;
+        }        
+        //print for each lane 
+        for (int l = fLane; l < lLane; l++) {
+            int numberOfRounds = 10;
+            int ageGroup = 0;
+            //Find number of rounds for the current lane
+            for (ScoreObject ob : list) {
+                if (ob.getLaneID().equals("" + l)) {
+                    numberOfRounds = Integer.parseInt(ob.getNumberOfRounds());
+                    ageGroup = Integer.parseInt(ob.getAgeGroup());
+                    break;
+                }
+            }
+            //Loops through each object
+            for (int i = 0; i < list.size(); i++) {
+                //only generate lanes with the correct ageGroup        
+                if (ageGroup != Integer.parseInt(ageGroupIn)) {
+                    break;
+                }
+                // if its the first object, create column labels
+                if (i == 0) {
+
+                    out.println("<table border=\"1\">\n"
+                            + "<thead >\n"
+                            + "<tr>\n"
+                            + "<th>ParticipantID</th>\n"
+                            + "<th>FirstName</th>\n"
+                            + "<th>LastName</th>\n");
+                    //Print headings for numberOfRounds in current lane
+                    for (int r = 1; r < numberOfRounds + 1; r++) {
+                        out.println("<th>Round" + r + "</th>\n");
+                    }
+                    out.println("<th>Score</th>\n"
+                            + "<th>Place</th>\n"
+                            + "</tr>\n"
+                            + "</thead>");
+                   //add first row
+                    if (list.get(i).getAgeGroup().equals(ageGroupIn) && list.get(i).getLaneID().equals("" + l) && list.get(i).getPlace() < 4) {
+                        out.println(addTableRow(list.get(i).getParticipantID(), list.get(i).getfName(), list.get(i).getlName(), list.get(i).getRoundNumber(), list.get(i).getNumberOfRounds(), list.get(i).getResultList(), "" + list.get(i).getPlace(), list.get(i).getTotalScore()));
+                    }
+                    //add a row for each participant object & check if its the correct lane
+                } else if (list.get(i).getAgeGroup().equals(ageGroupIn) && list.get(i).getLaneID().equals("" + l) && list.get(i).getPlace() < 4) {
+                    out.println(addTableRow(list.get(i).getParticipantID(), list.get(i).getfName(), list.get(i).getlName(), list.get(i).getRoundNumber(), list.get(i).getNumberOfRounds(), list.get(i).getResultList(), "" + list.get(i).getPlace(), list.get(i).getTotalScore()));
+
+                }
+                //if its the last object, end the table
+                if (i == list.size() - 1) {
+                    out.println("<br>");
+                    out.println("Lane: " + l);
+                    out.println("</tbody>\n" + "</table>");
+
+                }
+            }
+        }
     }
 
 }

@@ -16,6 +16,7 @@ public class ScoreObject {
 
     private String scoreID;
     private String participantID;
+    private String numberInLane;
     private String ageGroup;
     private String raceID;
     private String roundNumber;
@@ -84,6 +85,15 @@ public class ScoreObject {
     public String getParticipantID() {
         return participantID;
     }
+
+    public String getNumberInLane() {
+        return numberInLane;
+    }
+
+    public void setNumberInLane(String numberInLane) {
+        this.numberInLane = numberInLane;
+    }   
+    
 
     public String getRaceID() {
         return raceID;

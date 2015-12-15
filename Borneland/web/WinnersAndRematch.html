@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <h1>Age Group : Top 3 </h1>
+        <form action="ServletControllerRanking" method="GET">   
+            <input type="hidden" name="type" value="ranking" />
+            
+            <input type="submit" value="Winners" />  
+            <select name="ageDropDown" size="1">
+                <option value="1">Age 0-6</option>
+                <option value="2">Age 7-9</option>
+                <option value="3">Age 10-14</option>
+
+            </select>
+
+        </form>
+    </body>
+</html>

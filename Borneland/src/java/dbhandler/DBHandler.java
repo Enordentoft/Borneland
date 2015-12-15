@@ -1,5 +1,6 @@
 package dbhandler;
 
+import functions.NumberInLaneComparator;
 import functions.PlaceComparator;
 import functions.ScoreObject;
 import java.sql.Connection;
@@ -23,11 +24,11 @@ import java.util.logging.Logger;
  */
 public class DBHandler {
 
-    long lastUpdate, currentUpdate;
-    long waitTime = 2;
-    ArrayList<ScoreObject> scoreObjectList;
+    private long lastUpdate, currentUpdate;
+    private long waitTime = 2;
+    private ArrayList<ScoreObject> scoreObjectList;
     //ArrayList<ScoreObject> rankedObjectList;
-    Connection con;
+    private Connection con;
 
     public DBHandler() {
         createConnection();
@@ -36,6 +37,9 @@ public class DBHandler {
 
     }
 
+    /**
+     * create connection for the database
+     */
     private void createConnection() {
         try {
             String connectionUrl = "jdbc:sqlserver://192.168.100.106;user=Michael;password=123;";
@@ -46,12 +50,20 @@ public class DBHandler {
         }
     }
 
-    //should be singleton?   
-    public Connection getConnecion() {
+   
+    public Connection getConnecion() {               
         return con;
     }
 
-    private ArrayList<ScoreObject> getRanking(ArrayList<ScoreObject> list) {
+    /**
+     * Calculates ranking and adds it to the objects in the list
+     * @param list
+     * @return 
+     */
+    public ArrayList<ScoreObject> getRankedList() {
+        ArrayList<ScoreObject> list = getUpdatedList();
+        //sort needed for the method to work
+        Collections.sort(list, new PlaceComparator());
         //loop each ageGroupID
         for (int i = 1; i < 4; i++) {
             int place = 1;
@@ -78,65 +90,13 @@ public class DBHandler {
         }
         return list;
     }
-
-    /*
-     public ArrayList<ScoreObject> getRanking(ArrayList<ScoreObject> list) {
-
-     Collections.sort(list, new PlaceComparator());
-     //loop each ageGroupID
-     for (int i = 0; i < 4; i++) {
-     int place = 1;
-     int deltaIndex = 0;
-     //Loop throuhg list
-     for (int k = 0; k < list.size(); k++) {
-              
-
-     {          //If the object has the correct ageGroup
-     if (list.get(k).getAgeGroup().equals("" + i)) {
-     deltaIndex++;
-     list.get(k).setPlace(""+place);
-
-     // If the next participant does not have the same score increase place
-     if (list.get(k + 1).getTotalScore() != list.get(k).getTotalScore()) {
-     place++;
-     //add X to result to indicate rematch on tie score
-     }else if(deltaIndex < 4 && list.get(k + 1).getTotalScore() == list.get(k).getTotalScore()){
-     list.get(k).setPlace("" + place+"X");
-     list.get(k+1).setPlace("" + place+"X");
-     k++;
-     }
-     }
-     }
-     // handles last element, to prevent out of bounds exception
-     if (k == list.size() - 2) {
-     if (list.get(k + 1).getTotalScore() != list.get(k).getTotalScore()) {
-     place +=1;
-     list.get(k + 1).setPlace(""+place);
-     break;
-     }else if(list.get(k + 1).getTotalScore() == list.get(k).getTotalScore()){     
-     place +=1;
-     if(deltaIndex < 4){
-     //list.get(k).setPlace("" + place+"X");
-     list.get(k+1).setPlace("" + place+"X");
-     }else{
-     list.get(k+1).setPlace("" + place+"x");
-     }
-     //k++;
-     }else {
-     //list.get(k).setPlace("" + place+"X");
-     place +=1;
-     list.get(k+1).setPlace("" + place+"Xx");
-     break;
-     }
-
-     }
-            
-     }
-     }
-
-     return list;
-     }*/
-    private ArrayList<ScoreObject> getScore() throws SQLException {
+    
+    /**
+     * Main method for returning a scorelist, used in the getUpdatedList method
+     * @return
+     * @throws SQLException 
+     */
+    private ArrayList<ScoreObject> getDatabaseScoreList() throws SQLException {
         try {
 
             //String q = "SELECT * FROM BornelandDB.dbo.scores";
@@ -152,19 +112,16 @@ public class DBHandler {
                 }
 
             }
-            //sort by lane and totalScore
-            //Collections.sort(scoreObjectList, new PartComparator());
-
-            //get names
-            getNames(scoreObjectList);
-            Collections.sort(scoreObjectList, new PlaceComparator());
-            //set place (ranking)
-            getRanking(scoreObjectList);
-
+          
+            //get names etc for the objects
+            getNames(scoreObjectList);         
+            //sort by numerInLane
+            Collections.sort(scoreObjectList, new NumberInLaneComparator());
+/*
             for (ScoreObject ob : scoreObjectList) {
                 System.out.println(ob.toString());
 
-            }
+            }*/
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -174,7 +131,8 @@ public class DBHandler {
         return scoreObjectList;
 
     }
-
+    
+   
     /**
      * returns true if the id already exists, and adds result to the existing
      * object
@@ -226,11 +184,16 @@ public class DBHandler {
         return list;
     }
 
-    public ArrayList<String> getParticipantsOnLane(int laneID) {
-        ArrayList<String> list = new ArrayList<>();
+    /**
+     * get participant on a specifact lane, used for dropdown menu
+     * @param laneID
+     * @return 
+     */
+    public ArrayList<ScoreObject> getParticipantsOnLane(int laneID) {
+        ArrayList<ScoreObject> list = new ArrayList<>();
         for (ScoreObject obj : getUpdatedList()) {
             if (obj.getLaneID().equals("" + laneID)) {
-                list.add(obj.getParticipantID());
+                list.add(obj);
             }
         }
         return list;
@@ -253,7 +216,7 @@ public class DBHandler {
             try {
                 lastUpdate = System.currentTimeMillis();
                 scoreObjectList.clear();
-                return getScore();
+                return getDatabaseScoreList();
             } catch (SQLException ex) {
                 ex.printStackTrace();
             }
@@ -290,6 +253,16 @@ public class DBHandler {
 
     }
 
+    /**
+     * create participant in the database, and add rounds based on agegroup
+     * @param fName
+     * @param lName
+     * @param ageGroupID
+     * @param email
+     * @param laneID
+     * @return
+     * @throws SQLException 
+     */
     public ResultSet createParticipant(String fName, String lName, String ageGroupID, String email, String laneID) throws SQLException {
         String sql = "EXECUTE createParticipant @firstName = '" + fName + "', @lastName = '" + lName + "', @ageGroupID = " + ageGroupID + ", @email = '" + email + "', @laneID = " + laneID;
         Statement st = con.createStatement();
@@ -315,7 +288,11 @@ public class DBHandler {
         //System.out.println("createCheck dbHandler" +createCheck);
         return rs;
     }
-
+    
+    
+/**
+ * reset database updatetimer
+ */
     public void resetUpdateTimer() {
         lastUpdate -= (waitTime * 1000);
     }

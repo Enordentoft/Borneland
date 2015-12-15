@@ -23,7 +23,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author Michael
  */
-public class ServletControllerParentView extends HttpServlet {
+public class ServletControllerRanking extends HttpServlet {
 
     private DBHandler db;
     private ArrayList<ScoreObject> list;
@@ -66,11 +66,11 @@ public class ServletControllerParentView extends HttpServlet {
             out.println("<html>");
             out.println("<head>");
             out.println("<meta http-equiv=\"refresh\" content=\""+ updateTime +"\">");
-            out.println("<title>Servlet ServletOne</title>");
+            out.println("<title>Servlet Ranking</title>");
             out.println("</head>");
             out.println("<body>");         
             //out.println("<h1>Age Group " + age + ": Results for parents </h1>");
-            out.println("<h1>Age Group " + ageGroup[Integer.parseInt(request.getParameter("ageDropDown"))] + ": Results for parents </h1>");
+            out.println("<h1>Age Group " + ageGroup[Integer.parseInt(request.getParameter("ageDropDown"))] + ": Top 3 </h1>");
             //send printWriter, ScoreList, check what ageGroup have been selected, specify lane or set to 0 to show all
             requestChecker(out, list, request);
             //handler.TableGenerator(out, list, request.getParameter("ageDropDown"), 0);                      
@@ -80,8 +80,8 @@ public class ServletControllerParentView extends HttpServlet {
     }
     
     public void requestChecker(PrintWriter out, ArrayList<ScoreObject> list, HttpServletRequest request) throws SQLException, IOException, ServletException{
-        
-            handler.TableGenerator(out, list, request.getParameter("ageDropDown"), 0); 
+
+            handler.TableGeneratorForTopRanking(out, list, request.getParameter("ageDropDown"), 0); 
         
     }
       

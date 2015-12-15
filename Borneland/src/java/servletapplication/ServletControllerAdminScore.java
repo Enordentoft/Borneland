@@ -72,7 +72,7 @@ public class ServletControllerAdminScore extends HttpServlet {
             out.println("</head>");
             out.println("<body>");         
             //out.println("<h1>Age Group " + age + ": Results for parents </h1>");
-            out.println("<h1>Age Group " + request.getParameter("ageDropDown") + ": Results for parents </h1>");
+            out.println("<h1>Age Group " + ageGroup[Integer.parseInt(request.getParameter("ageDropDown"))] + ": Results for parents </h1>");
             //send printWriter, ScoreList, check what ageGroup have been selected, specify lane or set to 0 to show all
             requestChecker(out, list, request);
             //handler.TableGenerator(out, list, request.getParameter("ageDropDown"), 0);                      
@@ -82,18 +82,14 @@ public class ServletControllerAdminScore extends HttpServlet {
     }
     
     public void requestChecker(PrintWriter out, ArrayList<ScoreObject> list, HttpServletRequest request) throws SQLException, IOException, ServletException{
-        
-//if request contains the SelectLane dropdown (from InputScore.html)
-            System.out.println("//////////////" +request.getParameter("type"));
-           // System.out.println("//////////////" + laneSelected[1]);  
-            if(request != null){
-        if(request.getParameter("type").equals("scoreAdmin")){  
+     
             int laneID = Integer.parseInt(request.getParameter("SelectedLane"));
             //Stop updating when in scoreAdmin mode
             //updateTime = "";
-            //lane
+            //array to control lane selected option in the html
             laneSelected[laneID] = "selected=\"selected\""; 
             //"+ laneSelected[0]+"
+            //array to control age selected option in the html
             ageSelected[Integer.parseInt(request.getParameter("ageDropDown"))] = "selected=\"selected\""; 
             //"+ ageSelected[1]+"         
             
@@ -155,13 +151,7 @@ out.println("            </select>\n" +
              handler.TableGenerator(out, list, request.getParameter("ageDropDown"), Integer.parseInt(request.getParameter("SelectedLane")));
                          updateCheck(request.getParameter("SelectedLane"),request.getParameter("ParticipantID"),request.getParameter("SelectRound"),request.getParameter("SetResult"));
 
-        }else if(request.getParameter("type").equals("index")){
-            //set update time for parents
-           // updateTime = "2";
-            //shows all lanes because last parameter is 0
-        handler.TableGenerator(out, list, request.getParameter("ageDropDown"), 0); 
-            
-        }}
+       
         //System.out.println("/////////"+request.getParameter("ageDropDown").toString());
         
     }
@@ -173,11 +163,11 @@ out.println("            </select>\n" +
      * @param out 
      */
     public void participansOnLane(int laneID, PrintWriter out){
-        ArrayList<String> list = db.getParticipantsOnLane(laneID);
+        ArrayList<ScoreObject> list = db.getParticipantsOnLane(laneID);
        
-        if(list.size() >0){
+        if(list.size() > 0){
         for (int i = 0; i < list.size(); i++) {
-            out.println(" <option  value=\""+ list.get(i)+"\">ParticipantID "+list.get(i)+"</option>");
+            out.println(" <option  value=\""+ list.get(i).getParticipantID()+"\">ParticipantID "+list.get(i).getParticipantID()+"</option>");
         }               
         }else{
              out.println("<option>ParticipantID -</option> ");
