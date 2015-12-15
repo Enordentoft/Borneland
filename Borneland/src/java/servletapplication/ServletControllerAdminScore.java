@@ -30,7 +30,8 @@ public class ServletControllerAdminScore extends HttpServlet {
     private TableHandler handler;
     private String[] laneSelected, ageSelected, ageGroup; 
     
-    //private String updateTime = "";    
+    private String updateTime = "4";
+    private String updateTimeAdmin = "";
     private String age = "0";
 
     @Override
@@ -66,7 +67,7 @@ public class ServletControllerAdminScore extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            //out.println("<meta http-equiv=\"refresh\" content=\"\">");
+            out.println("<meta http-equiv=\"refresh\" content=\""+(request.getParameter("type".equals("scoreAdmin") ? updateTimeAdmin : updateTime))+"\">");
             out.println("<title>Servlet ServletOne</title>");
             out.println("</head>");
             out.println("<body>");         
@@ -84,7 +85,8 @@ public class ServletControllerAdminScore extends HttpServlet {
         
 //if request contains the SelectLane dropdown (from InputScore.html)
             System.out.println("//////////////" +request.getParameter("type"));
-           // System.out.println("//////////////" + laneSelected[1]);          
+           // System.out.println("//////////////" + laneSelected[1]);  
+            if(request != null){
         if(request.getParameter("type").equals("scoreAdmin")){  
             int laneID = Integer.parseInt(request.getParameter("SelectedLane"));
             //Stop updating when in scoreAdmin mode
@@ -96,7 +98,7 @@ public class ServletControllerAdminScore extends HttpServlet {
             //"+ ageSelected[1]+"         
             
             
-            out.println(" <form action=\"ServletController\" method=\"POST\">   \n" +
+            out.println(" <form action=\"ServletControllerAdminScore\" method=\"POST\">   \n" +
 "            <input type=\"hidden\" name=\"type\" value=\"scoreAdmin\" />\n" +
 "\n" +
 "            <input type=\"submit\" value=\"GetLane\" />\n" +
@@ -159,7 +161,7 @@ out.println("            </select>\n" +
             //shows all lanes because last parameter is 0
         handler.TableGenerator(out, list, request.getParameter("ageDropDown"), 0); 
             
-        }
+        }}
         //System.out.println("/////////"+request.getParameter("ageDropDown").toString());
         
     }

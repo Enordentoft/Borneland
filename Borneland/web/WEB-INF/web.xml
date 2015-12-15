@@ -4,17 +4,19 @@
         <servlet-name>ServletControllerParentView</servlet-name>
         <servlet-class>servletapplication.ServletControllerParentView</servlet-class>
     </servlet>
+  
     <servlet>
         <servlet-name>ServletControllerAdminScore</servlet-name>
         <servlet-class>servletapplication.ServletControllerAdminScore</servlet-class>
     </servlet>
-    <servlet-mapping>
-        <servlet-name>ServletControllerParentView</servlet-name>
-        <url-pattern>/ServletControllerParentView</url-pattern>
-    </servlet-mapping>
+   
       <servlet-mapping>
         <servlet-name>ServletControllerAdminScore</servlet-name>
         <url-pattern>/ServletControllerAdminScore</url-pattern>
+    </servlet-mapping>  
+    <servlet-mapping>
+        <servlet-name>ServletControllerParentView</servlet-name>
+        <url-pattern>/ServletControllerParentView</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
