@@ -76,7 +76,8 @@ public class TableHandler {
                         out.println("<th>Round" + r + "</th>\n");
                     }
                     out.println("<th>Score</th>\n"
-                            + "<th>Place</th>\n"
+                            //only print place heading if there is a score, mainly used for Score Admin
+                            + (list.get(i).getPlace() > 0 ? "<th>Place</th>\n":"")
                             + "</tr>\n"
                             + "</thead>");
                    //add first row
@@ -129,7 +130,8 @@ public class TableHandler {
 
         tableRow += tableRound;
         tableRow += "<td>" + totalScore + "</td>\n"
-                + "<td>" + place + "</td>\n"
+                //Only print place/ranking if it's more than 0, intendet for removal in Score Admin
+                + (Integer.parseInt(place) > 0 ? "<td>" + place + "</td>\n":"")
                 +//11
                 "</tr>";
         return tableRow;
