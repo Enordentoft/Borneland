@@ -64,7 +64,9 @@ public class ServerHandler extends UnicastRemoteObject implements IServer {
             
         } catch (SQLException ex) {
             Logger.getLogger(ServerHandler.class.getName()).log(Level.SEVERE, null, ex);
-        }        
+        }
+        //next updated list will be from the database.
+        db.resetUpdateTimer();
         
                
     }

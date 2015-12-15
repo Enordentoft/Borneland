@@ -23,7 +23,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author Michael
  */
-public class ServletController extends HttpServlet {
+public class ServletControllerAdminScore extends HttpServlet {
 
     private DBHandler db;
     private ArrayList<ScoreObject> list;
@@ -102,7 +102,7 @@ public class ServletController extends HttpServlet {
 "\n" +
 "            <input type=\"submit\" value=\"GetLane\" />\n" +
 "            <select name=\"SelectedLane\">\n" +
-"                <option "+ laneSelected[0]+" value=\"-\">Show All</option>\n" +
+"                <option "+ laneSelected[0]+" value=\"0\">Show All</option>\n" +
 "                <option "+ laneSelected[1]+" value=\"1\">Lane 1</option>\n" +
 "                <option "+ laneSelected[2]+" value=\"2\">Lane 2</option>\n" +
 "                <option "+ laneSelected[3]+" value=\"3\">Lane 3</option>\n" +
