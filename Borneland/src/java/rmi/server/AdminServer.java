@@ -10,8 +10,6 @@ import java.rmi.RemoteException;
 import java.rmi.registry.Registry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.naming.Context;
-import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import rmi.common.IServer;
 
@@ -21,18 +19,22 @@ import rmi.common.IServer;
  */
 public class AdminServer {
 
-    public static void main(String[] args) {
+    public static void main(String[] args){
         AdminServer server = new AdminServer();
-        server.createConnection();
+        server.setup();
     }
 
-    public void createConnection() {
+    /**
+     * setup server
+     */
+    public void setup(){
         try {
-            Registry registry = java.rmi.registry.LocateRegistry.createRegistry(1099); //Create a registry, this is the first server that starts up
-            System.setSecurityManager(new SecurityManager());
-            //Context namingContext = new InitialContext();
+            //Create a registry
+            Registry registry = java.rmi.registry.LocateRegistry.createRegistry(1099); 
+            System.setSecurityManager(new SecurityManager());            
             IServer server = new ServerHandler();
-            registry.rebind("rmi://localhost/adminServer", server); //Bind the server to the registry
+            //Bind the server to the registry
+            registry.rebind("rmi://localhost/adminServer", server); 
 
         } catch (AccessException ex) {
             Logger.getLogger(AdminServer.class.getName()).log(Level.SEVERE, null, ex);

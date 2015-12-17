@@ -6,13 +6,12 @@ package servletapplication;
  * and open the template in the editor.
  */
 
-import functions.ScoreObject;
+import helperobjects.ScoreObject;
 import dbhandler.DBHandler;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -28,20 +27,17 @@ public class ServletControllerRanking extends HttpServlet {
     private DBHandler db;
     private ArrayList<ScoreObject> list;
     private TableHandler handler;
-    private String[] laneSelected, ageSelected, ageGroup; 
+    private String[] ageGroup; 
     
     private String updateTime = "2";   
 
     @Override
     public void init() throws ServletException {
-        super.init(); //To change body of generated methods, choose Tools | Templates.
+        super.init(); 
         db = new DBHandler();
-        handler = new TableHandler();
-        laneSelected = new String[11];
-        ageSelected = new String[4];
+        handler = new TableHandler();      
         ageGroup = new String[]{"","0-6","7-9","10-14"};
-        Arrays.fill(laneSelected, "");
-        Arrays.fill(ageSelected, "");
+      
     }
 
     /**
@@ -57,9 +53,7 @@ public class ServletControllerRanking extends HttpServlet {
             throws ServletException, IOException, SQLException {
         response.setContentType("text/html;charset=UTF-8");
         list = db.getRankedList();
-      /*  if(ageGroup[Integer.parseInt(request.getParameter("ageDropDown"))] != null){
-        age = ageGroup[Integer.parseInt(request.getParameter("ageDropDown"))];            
-        }*/
+
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
             out.println("<!DOCTYPE html>");
@@ -69,20 +63,26 @@ public class ServletControllerRanking extends HttpServlet {
             out.println("<title>Servlet Ranking</title>");
             out.println("</head>");
             out.println("<body>");         
-            //out.println("<h1>Age Group " + age + ": Results for parents </h1>");
+            // Print heading
             out.println("<h1>Age Group " + ageGroup[Integer.parseInt(request.getParameter("ageDropDown"))] + ": Top 3 </h1>");
-            //send printWriter, ScoreList, check what ageGroup have been selected, specify lane or set to 0 to show all
-            requestChecker(out, list, request);
-            //handler.TableGenerator(out, list, request.getParameter("ageDropDown"), 0);                      
+            //send printWriter, ScoreList and request
+            requestChecker(out, list, request);                             
             out.println("</body>");
             out.println("</html>");
         }
     }
     
+    /**
+     * Print all participants with a place / rank between 1-3
+     * @param out
+     * @param list
+     * @param request
+     * @throws SQLException
+     * @throws IOException
+     * @throws ServletException 
+     */
     public void requestChecker(PrintWriter out, ArrayList<ScoreObject> list, HttpServletRequest request) throws SQLException, IOException, ServletException{
-
-            handler.TableGeneratorForTopRanking(out, list, request.getParameter("ageDropDown"), 0); 
-        
+            handler.TableGeneratorForTopRanking(out, list, request.getParameter("ageDropDown"), 0);         
     }
       
 

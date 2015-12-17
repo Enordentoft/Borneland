@@ -6,7 +6,7 @@ package servletapplication;
  * and open the template in the editor.
  */
 
-import functions.ScoreObject;
+import helperobjects.ScoreObject;
 import dbhandler.DBHandler;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -29,14 +29,10 @@ public class ServletControllerAdminScore extends HttpServlet {
     private ArrayList<ScoreObject> list;
     private TableHandler handler;
     private String[] laneSelected, ageSelected, ageGroup; 
-    
-    private String updateTime = "4";
-    private String updateTimeAdmin = "";
-    private String age = "0";
 
     @Override
     public void init() throws ServletException {
-        super.init(); //To change body of generated methods, choose Tools | Templates.
+        super.init(); 
         db = new DBHandler();
         handler = new TableHandler();
         laneSelected = new String[11];
@@ -59,41 +55,42 @@ public class ServletControllerAdminScore extends HttpServlet {
             throws ServletException, IOException, SQLException {
         response.setContentType("text/html;charset=UTF-8");
         list = db.getUpdatedList();
-      /*  if(ageGroup[Integer.parseInt(request.getParameter("ageDropDown"))] != null){
-        age = ageGroup[Integer.parseInt(request.getParameter("ageDropDown"))];            
-        }*/
+   
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<meta http-equiv=\"refresh\" content=\""+(request.getParameter("type".equals("scoreAdmin") ? updateTimeAdmin : updateTime))+"\">");
+            out.println("<meta http-equiv=\"refresh\" content=\"\">");
             out.println("<title>Servlet ServletOne</title>");
             out.println("</head>");
-            out.println("<body>");         
-            //out.println("<h1>Age Group " + age + ": Results for parents </h1>");
+            out.println("<body>");  
+            // Print heading with age
             out.println("<h1>Admin Score Input: Age Group " + ageGroup[Integer.parseInt(request.getParameter("ageDropDown"))] + "</h1>");
-            //send printWriter, ScoreList, check what ageGroup have been selected, specify lane or set to 0 to show all
-            requestChecker(out, list, request);
-            //handler.TableGenerator(out, list, request.getParameter("ageDropDown"), 0);                      
+            //send printWriter, ScoreList and request
+            requestChecker(out, list, request);                             
             out.println("</body>");
             out.println("</html>");
         }
     }
     
+    /**
+     * 
+     * @param out
+     * @param list
+     * @param request
+     * @throws SQLException
+     * @throws IOException
+     * @throws ServletException 
+     */
     public void requestChecker(PrintWriter out, ArrayList<ScoreObject> list, HttpServletRequest request) throws SQLException, IOException, ServletException{
      
-            int laneID = Integer.parseInt(request.getParameter("SelectedLane"));
-            //Stop updating when in scoreAdmin mode
-            //updateTime = "";
+            int laneID = Integer.parseInt(request.getParameter("SelectedLane"));           
             //array to control lane selected option in the html
-            laneSelected[laneID] = "selected=\"selected\""; 
-            //"+ laneSelected[0]+"
+            laneSelected[laneID] = "selected=\"selected\"";            
             //array to control age selected option in the html
-            ageSelected[Integer.parseInt(request.getParameter("ageDropDown"))] = "selected=\"selected\""; 
-            //"+ ageSelected[1]+"         
-            
-            
+            ageSelected[Integer.parseInt(request.getParameter("ageDropDown"))] = "selected=\"selected\"";             
+            //print buttons and dropdowns
             out.println(" <form action=\"ServletControllerAdminScore\" method=\"POST\">   \n" +
 "            <input type=\"hidden\" name=\"type\" value=\"scoreAdmin\" />\n" +
 "\n" +
@@ -122,7 +119,7 @@ public class ServletControllerAdminScore extends HttpServlet {
 "            <br>\n" +
 "            <br>\n" +
 "            <select name=\"ParticipantID\">\n"
-                    + "<option value=\"-\">ParticipantID</option> ");
+                    + "<option value=\"-\">ParticipantID -</option> ");
                     //method for printing participant id
                     participansOnLane(laneID, out);
 out.println("            </select>\n" +
@@ -143,21 +140,18 @@ out.println("            </select>\n" +
 "                <option>1</option>\n" +
 "            </select>\n" +
 "            <input type=\"submit\" value=\"SubmitScore\" />  \n" +
-"        </form>    ");       
-            System.out.println(laneSelected[5]);
-            //Clear arrays to prevent duplicates
+"        </form>    ");            
+            //Clear arrays for dropdown to prevent duplicates
             Arrays.fill(laneSelected, "");
             Arrays.fill(ageSelected, "");
-             handler.TableGenerator(out, list, request.getParameter("ageDropDown"), Integer.parseInt(request.getParameter("SelectedLane")));
-                         updateCheck(request.getParameter("SelectedLane"),request.getParameter("ParticipantID"),request.getParameter("SelectRound"),request.getParameter("SetResult"));
-
-       
-        //System.out.println("/////////"+request.getParameter("ageDropDown").toString());
-        
+            //check for input
+             updateCheck(request.getParameter("SelectedLane"),request.getParameter("ParticipantID"),request.getParameter("SelectRound"),request.getParameter("SetResult"));
+             // print selected table
+             handler.TableGenerator(out, list, request.getParameter("ageDropDown"), Integer.parseInt(request.getParameter("SelectedLane")));        
     }
     
     /**
-     * prints participant ID's to the scoreAdmin html
+     * prints participant ID's to the scoreAdmin html dropdown
      * 
      * @param laneID
      * @param out 
@@ -172,16 +166,20 @@ out.println("            </select>\n" +
         }else{
              out.println("<option>ParticipantID -</option> ");
         }
-        //participansOnLane(laneID, out);
     }
     
+    /**
+     * If all parameters for the score update has been filled out, then insert into the database
+     * @param laneID
+     * @param participantID
+     * @param roundNumber
+     * @param result 
+     */
     public void updateCheck(String laneID, String participantID, String roundNumber, String result){
         
        if(!laneID.equals("-")&&!participantID.equals("-")&&!roundNumber.equals("-")&&!result.equals("-")){
-           db.updateScore(laneID, participantID, roundNumber, result);
-           System.out.println("UPDATE SUCCESS!!");
-       }
-        System.out.println("////////////" + "DID NOT UPDATE");
+           db.updateScore(laneID, participantID, roundNumber, result);     
+       }    
     }
     
 

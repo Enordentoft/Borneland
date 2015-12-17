@@ -1,8 +1,8 @@
 package dbhandler;
 
-import functions.NumberInLaneComparator;
-import functions.PlaceComparator;
-import functions.ScoreObject;
+import helperobjects.NumberInLaneComparator;
+import helperobjects.PlaceComparator;
+import helperobjects.ScoreObject;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -26,8 +26,7 @@ public class DBHandler {
 
     private long lastUpdate, currentUpdate;
     private long waitTime = 2;
-    private ArrayList<ScoreObject> scoreObjectList;
-    //ArrayList<ScoreObject> rankedObjectList;
+    private ArrayList<ScoreObject> scoreObjectList;    
     private Connection con;
 
     public DBHandler() {
@@ -42,7 +41,8 @@ public class DBHandler {
      */
     private void createConnection() {
         try {
-            String connectionUrl = "jdbc:sqlserver://192.168.100.106;user=Michael;password=123;";
+            //String connectionUrl = "jdbc:sqlserver://192.168.100.106;user=Michael;password=123;";
+            String connectionUrl = "jdbc:sqlserver://212.112.129.191;user=Michael;password=123;";
             con = DriverManager.getConnection(connectionUrl);
             System.out.println("Connected!");
         } catch (SQLException ex) {
@@ -62,11 +62,12 @@ public class DBHandler {
      */
     public ArrayList<ScoreObject> getRankedList() {
         ArrayList<ScoreObject> list = getUpdatedList();
-        //sort needed for the method to work
+        //sort age, score - needed for the method to work
         Collections.sort(list, new PlaceComparator());
         //loop each ageGroupID
         for (int i = 1; i < 4; i++) {
             int place = 1;
+            //keep track of the index for the current agegroup
             int deltaIndex = 0;
             //Loop throuhg list
             for (int k = 0; k < list.size(); k++) {
@@ -97,39 +98,26 @@ public class DBHandler {
      * @throws SQLException 
      */
     private ArrayList<ScoreObject> getDatabaseScoreList() throws SQLException {
-        try {
-
-            //String q = "SELECT * FROM BornelandDB.dbo.scores";
+        try {         
             String q = "EXECUTE getScoreFirst";
             Statement st = con.createStatement();
             ResultSet rs = st.executeQuery(q);
             while (rs.next()) {
-                if (checkID(rs.getString("participantID"), rs.getString("result"))) {
-                    // System.out.println("id already exists *****************************");             
-                } else {
-                    // System.out.println("id did not exist, added ***************************");
+                if (checkID(rs.getString("participantID"), rs.getString("result"))) {                                
+                } else {                    
                     scoreObjectList.add(new ScoreObject(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5)));
                 }
 
-            }
-          
+            }          
             //get names etc for the objects
             getNames(scoreObjectList);         
             //sort by numerInLane
             Collections.sort(scoreObjectList, new NumberInLaneComparator());
-/*
-            for (ScoreObject ob : scoreObjectList) {
-                System.out.println(ob.toString());
-
-            }*/
 
         } catch (Exception e) {
             e.printStackTrace();
-        }
-
-        //return scoreObjectList;
+        }        
         return scoreObjectList;
-
     }
     
    
@@ -185,7 +173,7 @@ public class DBHandler {
     }
 
     /**
-     * get participant on a specifact lane, used for dropdown menu
+     * get participants on a specifact lane, used for dropdown menu in score admin
      * @param laneID
      * @return 
      */
@@ -201,13 +189,13 @@ public class DBHandler {
 
     /**
      * Return a new scoreObjectList from database if last update was more than
-     * 20 sec, else return old list
+     * 30 sec, else return old list
      *
      * @return
      */
     public ArrayList<ScoreObject> getUpdatedList() {
         currentUpdate = System.currentTimeMillis();
-        waitTime = 20;
+        waitTime = 30;
         System.out.println("Time since last update:" + (currentUpdate - lastUpdate) / 1000);
 
         //Get list from database
@@ -227,6 +215,15 @@ public class DBHandler {
         return scoreObjectList;
 
     }
+    
+    /**
+ * reset database updatetimer
+ */
+    public void resetUpdateTimer() {
+        lastUpdate -= (waitTime * 1000);
+    }
+
+
 
     /**
      * update a participants score for a specific round
@@ -245,8 +242,7 @@ public class DBHandler {
             System.out.println("ROWS AFFECTED IN DB UPDATE" + rowsAffected);
             System.out.println("laneID" + laneID + "participantID" + participantID + "roundNumber" + roundNumber + "result" + result);
             //reset update time
-            resetUpdateTimer();
-            //EXECUTE updateScore @laneID = 1, @participantID = 1, @roundNumber = 1, @result = 1
+            resetUpdateTimer();     
         } catch (SQLException ex) {
             Logger.getLogger(DBHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -255,7 +251,7 @@ public class DBHandler {
 
     /**
      * create participant in the database, and add rounds based on agegroup
-     * @param fName
+     * @param fName1
      * @param lName
      * @param ageGroupID
      * @param email
@@ -268,8 +264,7 @@ public class DBHandler {
         Statement st = con.createStatement();
         boolean createCheck = st.execute(sql);
         sql = "EXECUTE returnCreateParticipant @laneID = " + laneID;
-        ResultSet rs = st.executeQuery(sql);
-        
+        ResultSet rs = st.executeQuery(sql);        
         int rounds;
         
         if(ageGroupID.equals("1")){
@@ -284,17 +279,8 @@ public class DBHandler {
             st.execute(sql);
             
         }
-
-        //System.out.println("createCheck dbHandler" +createCheck);
         return rs;
     }
     
     
-/**
- * reset database updatetimer
- */
-    public void resetUpdateTimer() {
-        lastUpdate -= (waitTime * 1000);
-    }
-
 }

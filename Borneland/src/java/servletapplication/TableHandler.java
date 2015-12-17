@@ -5,7 +5,7 @@
  */
 package servletapplication;
 
-import functions.ScoreObject;
+import helperobjects.ScoreObject;
 import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.ArrayList;

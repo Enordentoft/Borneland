@@ -12,7 +12,6 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.rmi.ssl.SslRMIClientSocketFactory;
 import javax.swing.JTextArea;
 import rmi.common.IClient;
 import rmi.common.IServer;
@@ -181,6 +180,7 @@ public class ClientGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_lNameActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // Connect to the RMI server
         try {
             Registry registry = LocateRegistry.getRegistry("localhost", 1099);
             System.setSecurityManager(new SecurityManager());
@@ -198,6 +198,7 @@ public class ClientGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // Create participant
         try {
             server.Create(fName.getText(), lName.getText(), ageGroupID.getText(), email.getText(), laneID.getText(), client);
         } catch (RemoteException ex) {
